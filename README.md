@@ -1,3 +1,45 @@
+# Git
+
+### Pull
+
+```
+git pull
+```
+
+### Commit
+
+```
+git add .
+git commit -m "Your commit message"
+```
+
+### Push
+
+```
+git push
+```
+
+### Switch branch
+
+```
+git checkout branch-name
+```
+
+### Create new branch
+
+```
+git checkout -b your-branch-name
+```
+
+### Merge branch
+
+Merge changes from a branch into the main branch:
+
+```
+git checkout main
+git merge your-branch-name
+```
+
 # Backend
 
 ### First setup
