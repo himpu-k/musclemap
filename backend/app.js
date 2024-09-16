@@ -5,12 +5,16 @@ const cors = require('cors')
 
 // Middleware
 const middleware = require('./utils/middleware')
-const config = require('./utils/config')
-const logger = require('./utils/logger')
+//const config = require('./utils/config')
+//const logger = require('./utils/logger')
 
 const app = express()
 
 app.use(cors())
 app.use(express.json())
+
+app.use(middleware.requestLogger)
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
 module.exports = app

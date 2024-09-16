@@ -51,7 +51,7 @@ cd backend
 npm install
 ```
 
-### Run backend in localhost:5000
+### Run backend in localhost:3001
 
 ```
 npm run dev
