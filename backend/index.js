@@ -2,7 +2,7 @@ const app = require('./app')
 const config = require('./utils/config')
 const logger = require('./utils/logger')
 
-app.get('/', (request, response) => {
+app.get('/not-found', (request, response) => {
   response.send('<h1>Hello World!</h1>')
 })
 
