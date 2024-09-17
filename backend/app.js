@@ -14,6 +14,10 @@ app.use(cors())
 app.use(express.json())
 app.use(express.static('dist'))
 
+app.get('/not-found', (request, response) => {
+  response.send('<h1>Hello World!</h1>')
+})
+
 app.use(middleware.requestLogger)
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
