@@ -1,12 +1,13 @@
 const logger = require('./logger')
+const morgan = require('morgan')
 
-const requestLogger = (request, response, next) => {
-  logger.info('Method:', request.method)
-  logger.info('Path:  ', request.path)
-  logger.info('Body:  ', request.body)
-  logger.info('---')
-  next()
-}
+// Create a custom Morgan token to log the request body
+morgan.token('body', (req) => {
+  return JSON.stringify(req.body)
+})
+
+// Configure morgan middleware with "tiny" configuration and custom token
+const morganMiddleware = morgan(':method :url :status :res[content-length] - :response-time ms :body')
 
 const unknownEndpoint = (request, response) => {
   response.status(404).send({ error: 'unknown endpoint' })
@@ -34,7 +35,7 @@ const errorHandler = (error, request, response, next) => {
 
 
 module.exports = {
-  requestLogger,
+  morganMiddleware,
   unknownEndpoint,
   errorHandler
 }

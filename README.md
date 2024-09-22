@@ -82,6 +82,18 @@ SECRET=
 
 Ask the variables from the team member who is handling the variables.
 
+### Structure
+
+```
+backend/
+├── controllers/    # Handles the incoming requests and responses
+├── models/         # Models MongoDB schemas
+├── utils/          # Utility functions
+├── index.js        # Entry point of the application
+├── package.json
+└── .env            # Environment variables (API keys, base URLs, etc.)
+```
+
 # Frontend
 
 ### First setup
