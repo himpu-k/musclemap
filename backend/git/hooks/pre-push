@@ -1,0 +1,11 @@
+#!/bin/sh
+
+# Run the deploy:full script before pushing
+npm run deploy:full
+
+# Exit with the status of the deploy:full command
+# If deploy:full fails, this will prevent the push
+if [ $? -ne 0 ]; then
+  echo "Build and deploy failed, push aborted."
+  exit 1
+fi
