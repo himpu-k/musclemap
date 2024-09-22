@@ -1,3 +1,15 @@
+# Deployed version
+
+The app is deployed on Render in address: https://musclemap.onrender.com/
+
+In short: backend is deployed as it is and frontend's production build (the dist directory) is copied to the root of the backend repository and configured the backend to show the frontend's main page (the file dist/index.html) as its main page.
+
+To have the latest production build in the frontend, use this command (this is beneficial to do whenever something is merged to the main-branch so that the deployed version will have the most recent frontend):
+```
+cd backend
+npm run deploy:full
+```
+
 # Git
 
 ### Pull
