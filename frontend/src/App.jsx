@@ -1,24 +1,11 @@
-import { useState } from 'react'
-import './App.css'
+import ExerciseCategories from './components/ExerciseCategories';
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const App = () => {
   return (
-    <>
-    
-      <h1>MuscleMap</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-    
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="App">
+      <ExerciseCategories />
+    </div>
+  );
+};
 
-export default App
+export default App;
