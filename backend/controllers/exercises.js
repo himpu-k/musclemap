@@ -1,5 +1,8 @@
 const exerciseRouter = require('express').Router()
 const axios = require('axios')
+
+const baseUrl = 'https://wger.de/api/v2'
+
 // https://wger.de/api/v2/schema/ui#/
 
 // Fetch all exercise categories from wger API (http://localhost:3001/api/exercises/exercisecategory)
@@ -20,7 +23,7 @@ Data format:
 */
 exerciseRouter.get('/exercisecategory', async (request, response) => {
   try {
-    const result = await axios.get(`${process.env.WGER_API_BASE_URL}/exercisecategory`)
+    const result = await axios.get(`${baseUrl}/exercisecategory`)
 
     // Respond with the exercise data
     response.json(result.data)
@@ -140,7 +143,7 @@ Data format of the exercise:
 */
 exerciseRouter.get('/exercisebaseinfo', async (request, response) => {
   try {
-    const result = await axios.get(`${process.env.WGER_API_BASE_URL}/exercisebaseinfo`)
+    const result = await axios.get(`${baseUrl}/exercisebaseinfo`)
 
     // Respond with the exercise data
     response.json(result.data)
@@ -152,7 +155,7 @@ exerciseRouter.get('/exercisebaseinfo', async (request, response) => {
 
 exerciseRouter.get('/exercisebaseinfo/category/:id', async (request, response) => {
   try {
-    const result = await axios.get(`${process.env.WGER_API_BASE_URL}/exercisebaseinfo/?category=${request.params.id}&limit=50`)
+    const result = await axios.get(`${baseUrl}/exercisebaseinfo/?category=${request.params.id}&limit=50`)
 
     // Filter out non-English exercises (keep only those with language === 2)
     const filteredExercises = result.data.results.map(exercise => ({
