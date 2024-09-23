@@ -1,22 +1,22 @@
-import { useEffect, useState } from 'react';
-import exerciseService from '../services/exerciseService';
-import ExerciseList from './ExerciseList';
+import { useEffect, useState } from 'react'
+import exerciseService from '../services/exerciseService'
+import ExerciseList from './ExerciseList'
 
 const ExerciseCategories = () => {
-  const [categories, setCategories] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [categories, setCategories] = useState([])
+  const [selectedCategory, setSelectedCategory] = useState(null)
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      exerciseService.getAllCategories().then((response) => setCategories(response.results));
-    };
+    const fetchCategories = async () =>   {
+      exerciseService.getAllCategories().then((response) => setCategories(response.results))
+    }
 
-    fetchCategories();
-  }, []);
+    fetchCategories()
+  }, [])
 
   const handleCategorySelect = (categoryId) => {
-    setSelectedCategory(categoryId); // Set the selected category ID
-  };
+    setSelectedCategory(categoryId) // Set the selected category ID
+  }
 
   return (
     <div>
@@ -25,7 +25,7 @@ const ExerciseCategories = () => {
         {categories.map((category) => (
           <li key={category.id} >
             <button onClick={() => handleCategorySelect(category.id)}>{category.name}</button>
-            
+
           </li>
         ))}
       </ul>
@@ -37,7 +37,7 @@ const ExerciseCategories = () => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ExerciseCategories;
+export default ExerciseCategories

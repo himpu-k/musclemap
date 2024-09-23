@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react';
-import exerciseService from '../services/exerciseService';
+import { useState, useEffect } from 'react'
+import exerciseService from '../services/exerciseService'
 
 const ExerciseList = ({ categoryId }) => {
-  const [exercises, setExercises] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [exercises, setExercises] = useState([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const fetchExercises = async () => {
-        const exerciseData = await exerciseService.getExercisesFromCategory(categoryId);
-        setExercises(exerciseData.results);
-        setLoading(false);
-    };
+      const exerciseData = await exerciseService.getExercisesFromCategory(categoryId)
+      setExercises(exerciseData.results)
+      setLoading(false)
+    }
 
-    fetchExercises();
-  }, [categoryId]);
+    fetchExercises()
+  }, [categoryId])
 
   if (loading) {
-    return <div>Loading exercises...</div>;
+    return <div>Loading exercises...</div>
   }
 
   return (
@@ -26,19 +26,18 @@ const ExerciseList = ({ categoryId }) => {
           <h4>{exercise.exercises[0].name}</h4>
           <p>Equipment: {exercise.equipment.map((equip) => equip.name).join(', ')}</p>
 
-           {/* Display images if available */}
+          {/* Display images if available */}
           {exercise.images.length > 0 ? (
             <div>
               <h5>Images:</h5>
-           
-                  <img
-                  src={exercise.images[0].image}
-                  alt={`Exercise ${exercise.exercises[0].name}`}
-                  width="150"
-                  style={{ marginRight: '10px' }}
-                />
-                 
-             
+
+              <img
+                src={exercise.images[0].image}
+                alt={`Exercise ${exercise.exercises[0].name}`}
+                width="150"
+                style={{ marginRight: '10px' }}
+              />
+
             </div>
           ) : (
             <p>No images available</p>
@@ -58,7 +57,7 @@ const ExerciseList = ({ categoryId }) => {
         </li>
       ))}
     </ul>
-  );
-};
+  )
+}
 
-export default ExerciseList;
+export default ExerciseList
