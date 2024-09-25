@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import exerciseService from '../services/exerciseService'
+import exerciseService from '../services/exercises'
 
 const ExerciseList = ({ categoryId }) => {
   const [exercises, setExercises] = useState([])
