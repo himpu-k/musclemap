@@ -1,5 +1,7 @@
 const logger = require('./logger')
 const morgan = require('morgan')
+const jwt = require('jsonwebtoken')
+const User = require('../models/user')
 
 // Create a custom Morgan token to log the request body
 morgan.token('body', (req) => {
@@ -33,9 +35,35 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+const tokenExtractor = (request, response, next) => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer ')) {
+    request.token = authorization.replace('Bearer ', '')
+  } else {
+    request.token = null
+  }
+  next()
+}
+
+const userExtractor = async (request, response, next) => {
+  const token = request.token
+  if (token) {
+    const decodedToken = jwt.verify(token, process.env.SECRET)
+    if (!decodedToken.id) {
+      return response.status(401).json({ error: 'token invalid' })
+    }
+    request.user = await User.findById(decodedToken.id)
+  } else {
+    request.user = null
+  }
+  next()
+}
+
 
 module.exports = {
   morganMiddleware,
   unknownEndpoint,
-  errorHandler
+  errorHandler,
+  tokenExtractor,
+  userExtractor
 }
