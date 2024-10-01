@@ -10,6 +10,15 @@ cd backend
 npm run deploy:full
 ```
 
+## Default user
+For now, the newly created programs are saved to the default user (changed in the future when login functionality starts to work).
+
+Default user info:
+```
+email: test@email.com
+password: test
+```
+
 # Git
 
 ### Pull
