@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import exerciseService from '../services/exercises'
+import exerciseService from '../../services/exercises'
 import ExerciseList from './ExerciseList'
 
 const ExerciseCategories = () => {
