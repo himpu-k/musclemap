@@ -1,6 +1,6 @@
 # Deployed version
 
-The app is deployed on Render in address: https://musclemap.onrender.com/
+The app is deployed on Render in address: https://musclemap.onrender.com/ (They say in their website that "Your free instance will spin down with inactivity, which can delay requests by 50 seconds or more." so it might take a long while before the website opens up.)
 
 In short: backend is deployed as it is and frontend's production build (the dist directory) is copied to the root of the backend repository and configured the backend to show the frontend's main page (the file dist/index.html) as its main page.
 
