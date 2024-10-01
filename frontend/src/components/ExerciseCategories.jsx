@@ -20,7 +20,7 @@ const ExerciseCategories = () => {
 
   return (
     <div>
-      <h2>Exercise Categories</h2>
+      <h2>Exercise categories in a list</h2>
       <ul>
         {categories.map((category) => (
           <li key={category.id} >
