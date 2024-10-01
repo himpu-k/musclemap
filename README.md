@@ -1,8 +1,8 @@
 # Deployed version
 
-The app is deployed on Render in address: https://musclemap.onrender.com/ (They say in their website that "Your free instance will spin down with inactivity, which can delay requests by 50 seconds or more." so it might take a long while before the website opens up.)
+The app is deployed on Render in address: https://musclemap.onrender.com/ (OBS! They say in their website that "Your free instance will spin down with inactivity, which can delay requests by 50 seconds or more." so it might take a long while before the website renders anything on the screen.)
 
-In short: backend is deployed as it is and frontend's production build (the dist directory) is copied to the root of the backend repository and configured the backend to show the frontend's main page (the file dist/index.html) as its main page.
+In short: Backend is deployed as it is and frontend's production build (the dist directory) is copied to the root of the backend repository and configured the backend to show the frontend's main page (the file dist/index.html) as its main page.
 
 To have the latest production build in the frontend, use this command (this is beneficial to do whenever something is merged to the main-branch so that the deployed version will have the most recent frontend):
 ```
@@ -75,7 +75,6 @@ To use enviromental variables, create .env-file to the root of the backend-folde
 
 ```
 MONGODB_URI=
-TEST_MONGODB_URI=
 PORT=3001
 SECRET=
 ```
