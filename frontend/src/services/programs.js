@@ -7,6 +7,7 @@ const setToken = newToken => {
   token = `Bearer ${newToken}`
 }
 
+// Get all programs for the user
 const getAll = async () => {
   const config = {
     headers: { Authorization: token }
@@ -16,6 +17,17 @@ const getAll = async () => {
   return response.data
 }
 
+// Get program details by id
+const getById = async id => {
+  const config = {
+    headers: { Authorization: token }
+  }
+  const request = axios.get(`${baseUrl}/${id}`, config)
+  const response = await request
+  return response.data
+}
+
+// Create new program for the user
 const create = async newObject => {
   const config = {
     headers: { Authorization: token }
@@ -25,6 +37,7 @@ const create = async newObject => {
   return response.data
 }
 
+// Update program
 const update = async (id, newObject) => {
   const config = {
     headers: { Authorization: token }
@@ -34,6 +47,7 @@ const update = async (id, newObject) => {
   return response.data
 }
 
+// Delete program
 const remove = async id => {
   const config = {
     headers: { Authorization: token }
@@ -43,4 +57,4 @@ const remove = async id => {
   return response.data
 }
 
-export default { getAll, create, setToken, update, remove }
+export default { getAll, getById, create, setToken, update, remove }
