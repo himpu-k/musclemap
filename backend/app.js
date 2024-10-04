@@ -3,6 +3,7 @@ require('express-async-errors')
 
 const cors = require('cors')
 const mongoose = require('mongoose')
+const path = require('path')
 
 // Middleware
 const middleware = require('./utils/middleware')
@@ -34,6 +35,11 @@ app.use('/api/exercises', exerciseRouter) // Used for third-party API
 app.use('/api/programs', programsRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
+
+// This middleware will handle all non-API routes by serving index.html from the dist directory
+app.get('*', (req, res) => {
+  res.sendFile(path.resolve(__dirname, 'dist', 'index.html'))
+})
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
