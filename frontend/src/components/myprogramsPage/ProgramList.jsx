@@ -44,7 +44,7 @@ const ProgramList = () => {
   }, [])
 
   const handleProgramClick = (props) => {
-    const hrefWithId = "/programs/" + props
+    const hrefWithId = '/programs/' + props
     window.location.href = hrefWithId
   }
 
@@ -87,7 +87,7 @@ const ProgramList = () => {
           }}
         >
           {programs.map((program) => (
-            <ListItem key={program._id} sx={{ marginBottom: isMobile ? 0.2 : 2, cursor:"pointer" }} onClick={() => handleProgramClick(program.id)}>
+            <ListItem key={program._id} sx={{ marginBottom: isMobile ? 0.2 : 2, cursor:'pointer' }} onClick={() => handleProgramClick(program.id)}>
               <Card
                 sx={{
                   width: '100%',
