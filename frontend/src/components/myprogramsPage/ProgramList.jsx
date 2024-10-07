@@ -43,6 +43,11 @@ const ProgramList = () => {
     fetchPrograms()
   }, [])
 
+  const handleProgramClick = (props) => {
+    const hrefWithId = "/programs/" + props
+    window.location.href = hrefWithId
+  }
+
   if (loading) {
     return (
       <Container>
@@ -82,7 +87,7 @@ const ProgramList = () => {
           }}
         >
           {programs.map((program) => (
-            <ListItem key={program._id} sx={{ marginBottom: isMobile ? 0.2 : 2 }}>
+            <ListItem key={program._id} sx={{ marginBottom: isMobile ? 0.2 : 2, cursor:"pointer" }} onClick={() => handleProgramClick(program.id)}>
               <Card
                 sx={{
                   width: '100%',
