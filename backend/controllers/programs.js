@@ -142,4 +142,53 @@ programsRouter.post('/:id/exercises', async (request, response) => {
   }
 })
 
+// Delete a program by ID
+programsRouter.delete('/:id', async (request, response) => {
+  const { id } = request.params
+
+  try {
+    // DELETE THIS LATER WHEN LOGIN IS IMPLEMENTED; NOW USING DEFAULT USER
+    const defaultEmail = 'test@email.com'
+    let user = await User.findOne({ email: defaultEmail })
+    /*
+    UNCOMMENT THIS LATER WHEN LOGIN AND AUTHENTICATION IS IMPLEMENTED
+    const user = request.user
+
+    // Check if the user is authenticated
+    if (!user) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+    */
+
+    if (!user) {
+      return response.status(404).json({ error: 'user not found' })
+    }
+
+    // Find the program by its ID
+    const program = await Program.findById(id)
+
+    if (!program) {
+      return response.status(404).json({ error: 'Program not found' })
+    }
+
+    // Check if the user owns the program
+    if (program.userId.toString() !== user._id.toString()) {
+      return response.status(403).json({ error: 'Permission denied' })
+    }
+
+    // Delete the program from the database
+    await Program.findByIdAndDelete(id)
+
+    // Remove the program from the user's programs array
+    user.programs = user.programs.filter(programId => programId.toString() !== id)
+    await user.save()
+
+    // Send a response indicating that the deletion was successful
+    response.status(204).end()
+  } catch (error) {
+    console.error('Error deleting program:', error)
+    response.status(500).json({ error: 'Failed to delete the program' })
+  }
+})
+
 module.exports = programsRouter

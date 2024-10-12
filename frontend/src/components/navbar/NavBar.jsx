@@ -16,8 +16,8 @@ const NavBar = () => {
     <AppBar position="static" sx={{ backgroundColor: '#efa37f' }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <FitnessCenterIcon onClick={() => handleBackToFrontpage()} sx={{ fontSize: 40, marginRight: 3 }} />
-          <Typography onClick={() => handleBackToFrontpage()} variant="h6" component="div" sx={{ flexGrow: 1, marginRight: 3 }}>
+          <FitnessCenterIcon onClick={() => handleBackToFrontpage()} sx={{ fontSize: 40, marginRight: 3, cursor:'pointer' }} />
+          <Typography onClick={() => handleBackToFrontpage()} variant="h6" component="div" sx={{ flexGrow: 1, marginRight: 3, cursor:'pointer' }}>
             My programs
           </Typography>
           <Button onClick={() => handleCreateNewClick()} variant="contained" sx={{ color: '#efa37f', backgroundColor: 'white', ':hover': { backgroundColor: 'lightgray' } }}>New</Button>

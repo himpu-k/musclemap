@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import programService from '../../services/programs'
-import { Container, Typography, CircularProgress, Box } from '@mui/material'
+import { Container, Typography, CircularProgress, Box, Alert } from '@mui/material'
 
 const ProgramDetails = () => {
   const { id } = useParams() // Get the program ID from the URL params
@@ -35,18 +35,13 @@ const ProgramDetails = () => {
     )
   }
 
-  if (error) {
-    return (
-      <Container>
-        <Typography variant="h6" color="error">
-          {error}
-        </Typography>
-      </Container>
-    )
-  }
-
   return (
     <Container>
+      {error ? (
+        <Alert severity="error" sx={{ marginBottom: 2 }}>
+          {error}
+        </Alert>
+      ) : null}
       <Typography variant="h4" component="h2" gutterBottom>
         {program.programName}
       </Typography>
