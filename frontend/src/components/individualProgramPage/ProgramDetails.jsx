@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import programService from '../../services/programs'
 import { Container, Typography, CircularProgress, Box, Alert } from '@mui/material'
+import Grid from '@mui/material/Grid2'
+import ExerciseCategories from '../exercises/ExerciseCategories'
 
 const ProgramDetails = () => {
   const { id } = useParams() // Get the program ID from the URL params
@@ -22,7 +24,7 @@ const ProgramDetails = () => {
     }
 
     fetchProgram()
-  }, [id])
+  }, [id]) // Ensure the fetch happens every time the ID changes
 
   if (loading) {
     return (
@@ -36,29 +38,35 @@ const ProgramDetails = () => {
   }
 
   return (
-    <Container>
-      {error ? (
-        <Alert severity="error" sx={{ marginBottom: 2 }}>
-          {error}
-        </Alert>
-      ) : null}
-      <Typography variant="h4" component="h2" gutterBottom>
-        {program.programName}
-      </Typography>
-      <Box>
-        <Typography variant="h6">Exercises:</Typography>
-        {program.exercises.map((exercise, index) => (
-          <Box key={index} sx={{ marginBottom: 2 }}>
-            <Typography variant="h6">{exercise.name}</Typography>
-            {exercise.sets.map((set, setIndex) => (
-              <Typography key={setIndex} variant="body1">
-                Set {set.setNumber}: {set.reps} reps @ {set.weight} kg
-              </Typography>
-            ))}
-          </Box>
-        ))}
-      </Box>
-    </Container>
+    <Grid container spacing={2}>
+      <Grid item xs={4}>
+        {/* Exercise Categories (This will trigger /exercisecategory call) */}
+        <ExerciseCategories />
+      </Grid>
+      <Grid item xs={8}>
+        {error ? (
+          <Alert severity="error" sx={{ marginBottom: 2 }}>
+            {error}
+          </Alert>
+        ) : null}
+        <Typography variant="h4" component="h2" gutterBottom>
+          {program?.programName}
+        </Typography>
+        <Box>
+          <Typography variant="h6">Exercises:</Typography>
+          {program?.exercises?.map((exercise, index) => (
+            <Box key={index} sx={{ marginBottom: 2 }}>
+              <Typography variant="h6">{exercise.name}</Typography>
+              {exercise.sets.map((set, setIndex) => (
+                <Typography key={setIndex} variant="body1">
+                  Set {set.setNumber}: {set.reps} reps @ {set.weight} kg
+                </Typography>
+              ))}
+            </Box>
+          ))}
+        </Box>
+      </Grid>
+    </Grid>
   )
 }
 

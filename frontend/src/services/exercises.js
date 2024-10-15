@@ -1,9 +1,8 @@
 import axios from 'axios'
-const baseUrl = 'api/exercises'
+const baseUrl = '/api/exercises'
 const getAllCategories = async () => {
   const request = axios.get(`${baseUrl}/exercisecategory`)
   const response = await request
-  console.log(response.data)
   return response.data
 }
 
