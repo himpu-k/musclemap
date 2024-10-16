@@ -17,6 +17,8 @@ const ProgramDetails = () => {
         const fetchedProgram = await programService.getById(id)
         setProgram(fetchedProgram)
         setLoading(false)
+
+        console.log(fetchedProgram)
       } catch (err) {
         setError('Failed to fetch program details')
         setLoading(false)
@@ -24,7 +26,7 @@ const ProgramDetails = () => {
     }
 
     fetchProgram()
-  }, [id]) // Ensure the fetch happens every time the ID changes
+  }, [id])
 
   if (loading) {
     return (
@@ -39,32 +41,44 @@ const ProgramDetails = () => {
 
   return (
     <Grid container spacing={2}>
-      <Grid item xs={4}>
-        {/* Exercise Categories (This will trigger /exercisecategory call) */}
-        <ExerciseCategories />
+      <Grid size={4}>
+        <ExerciseCategories programId={id}/>
       </Grid>
-      <Grid item xs={8}>
+      <Grid size={8}>
         {error ? (
           <Alert severity="error" sx={{ marginBottom: 2 }}>
             {error}
           </Alert>
         ) : null}
-        <Typography variant="h4" component="h2" gutterBottom>
-          {program?.programName}
-        </Typography>
-        <Box>
-          <Typography variant="h6">Exercises:</Typography>
-          {program?.exercises?.map((exercise, index) => (
-            <Box key={index} sx={{ marginBottom: 2 }}>
-              <Typography variant="h6">{exercise.name}</Typography>
-              {exercise.sets.map((set, setIndex) => (
-                <Typography key={setIndex} variant="body1">
-                  Set {set.setNumber}: {set.reps} reps @ {set.weight} kg
-                </Typography>
-              ))}
+
+        {program ? (
+          <>
+            <Typography variant="h4" component="h2" gutterBottom>
+              {program.programName}
+            </Typography>
+            <Box>
+              <Typography variant="h6">Exercises:</Typography>
+              {/* Add a conditional check for program.exercises */}
+              {program.exercises && program.exercises.length > 0 ? (
+                program.exercises.map((exercise, index) => (
+                  <Box key={index} sx={{ marginBottom: 2 }}>
+                    <Typography variant="h6">{exercise.name}</Typography>
+
+                    {exercise.sets && exercise.sets.length > 0 && exercise.sets.map((set, setIndex) => (
+                      <Typography key={setIndex} variant="body1">
+                        Set {set.setNumber}: {set.reps} reps @ {set.weight} kg
+                      </Typography>
+                    ))}
+                  </Box>
+                ))
+              ) : (
+                <Typography>No exercises found for this program.</Typography>
+              )}
             </Box>
-          ))}
-        </Box>
+          </>
+        ) : (
+          <Typography>Program not found.</Typography>
+        )}
       </Grid>
     </Grid>
   )

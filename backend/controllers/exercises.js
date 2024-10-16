@@ -34,7 +34,7 @@ exerciseRouter.get('/exercisebaseinfo', async (request, response) => {
 // Fetch exercise information by category from wger API
 exerciseRouter.get('/exercisebaseinfo/category/:id', async (request, response) => {
   try {
-    const result = await axios.get(`${baseUrl}/exercisebaseinfo/?category=${request.params.id}&limit=50`)
+    const result = await axios.get(`${baseUrl}/exercisebaseinfo/?category=${request.params.id}&limit=10`)
 
     // Filter out non-English exercises (keep only those with language === 2)
     const filteredExercises = result.data.results.map(exercise => ({
