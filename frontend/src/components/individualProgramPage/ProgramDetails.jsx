@@ -8,19 +8,24 @@ import { useAlert } from '../../context/AlertContext'
 import AddIcon from '@mui/icons-material/Add'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import SaveIcon from '@mui/icons-material/Save'
 
 const ProgramDetails = () => {
-  const { triggerErrorMessage } = useAlert()
+  const { triggerErrorMessage, triggerSuccessMessage } = useAlert()
   const { id } = useParams() // Get the program ID from the URL params
   const [program, setProgram] = useState(null)
   const [loading, setLoading] = useState(true)
   const [savedSetIndex, setSavedSetIndex] = useState(null) // State to track saved sets
+  const [editMode, setEditMode] = useState(false) // Track whether we're editing the program name
+  const [newProgramName, setNewProgramName] = useState('') // Track the new program name while editing
 
   useEffect(() => {
     const fetchProgram = async () => {
       try {
         const fetchedProgram = await programService.getById(id)
         setProgram(fetchedProgram)
+        setNewProgramName(fetchedProgram.programName) // Initialize with the existing program name
         setLoading(false)
       } catch (err) {
         triggerErrorMessage('Failed to fetch program details')
@@ -38,6 +43,22 @@ const ProgramDetails = () => {
       setProgram(updatedProgram) // Update program exercises
     } catch (error) {
       console.error('Failed to update program exercises:', error)
+    }
+  }
+
+  // Save the new program name
+  const handleSaveProgramName = async () => {
+    try {
+      const updatedProgram = {
+        ...program,
+        programName: newProgramName,
+      }
+      await programService.update(id, updatedProgram)
+      setProgram(updatedProgram) // Update local state with the new name
+      setEditMode(false) // Exit edit mode
+      triggerSuccessMessage('Program name updated successfully!')
+    } catch (error) {
+      triggerErrorMessage('Failed to update program name.')
     }
   }
 
@@ -138,9 +159,30 @@ const ProgramDetails = () => {
       <Grid size={8}>
         {program ? (
           <>
-            <Typography variant="h4" component="h2" gutterBottom>
-              {program.programName}
-            </Typography>
+            <Box display="flex" alignItems="center"  sx={{ marginBottom: 2, marginTop: 2 }}>
+              {editMode ? (
+                <>
+                  <TextField
+                    label="Program Name"
+                    value={newProgramName}
+                    onChange={(e) => setNewProgramName(e.target.value)}
+                    sx={{ marginRight: 2 }}
+                  />
+                  <IconButton onClick={handleSaveProgramName}>
+                    <CheckCircleIcon />
+                  </IconButton>
+                </>
+              ) : (
+                <>
+                  <Typography variant="h4" component="h2" gutterBottom>
+                    {program.programName}
+                  </Typography>
+                  <IconButton onClick={() => setEditMode(true)} sx={{ marginLeft: 2 }}>
+                    <EditIcon />
+                  </IconButton>
+                </>
+              )}
+            </Box>
             <Box>
               <Typography variant="h6">Exercises:</Typography>
               {program.exercises && program.exercises.length > 0 ? (
