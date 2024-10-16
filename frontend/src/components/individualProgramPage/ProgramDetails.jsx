@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import programService from '../../services/programs'
-import { Container, Typography, CircularProgress, Box, Alert } from '@mui/material'
+import { Container, Typography, CircularProgress, Box } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import ExerciseCategories from '../exercises/ExerciseCategories'
+import { useAlert } from '../../context/AlertContext'
 
 const ProgramDetails = () => {
+  const { triggerErrorMessage } = useAlert()
   const { id } = useParams() // Get the program ID from the URL params
   const [program, setProgram] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
 
   useEffect(() => {
     const fetchProgram = async () => {
@@ -18,13 +19,13 @@ const ProgramDetails = () => {
         setProgram(fetchedProgram)
         setLoading(false)
       } catch (err) {
-        setError('Failed to fetch program details')
+        triggerErrorMessage('Failed to fetch program details')
         setLoading(false)
       }
     }
 
     fetchProgram()
-  }, [id])
+  }, [id, triggerErrorMessage])
 
   // Callback to update the exercises in the program state
   const updateExercisesInProgram = async () => {
@@ -53,11 +54,6 @@ const ProgramDetails = () => {
         <ExerciseCategories programId={id} updateExercisesInProgram={updateExercisesInProgram} />
       </Grid>
       <Grid size={8}>
-        {error ? (
-          <Alert severity="error" sx={{ marginBottom: 2 }}>
-            {error}
-          </Alert>
-        ) : null}
         {program ? (
           <>
             <Typography variant="h4" component="h2" gutterBottom>

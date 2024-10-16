@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react'
 import exerciseService from '../../services/exercises'
 import programService from '../../services/programs'
-import { Box, Checkbox, Typography } from '@mui/material'
+import { Box, Checkbox, Typography, Alert } from '@mui/material'
+import { useAlert } from '../../context/AlertContext'
 
 const ExerciseList = ({ categoryId, programId, updateExercisesInProgram }) => {
+  const { triggerSuccessMessage, triggerErrorMessage } = useAlert()
   const [exercises, setExercises] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedExercises, setSelectedExercises] = useState([])
@@ -27,15 +29,19 @@ const ExerciseList = ({ categoryId, programId, updateExercisesInProgram }) => {
   const handleCheckboxChange = async (exerciseId, isChecked) => {
     try {
       if (isChecked) {
-      // If the exercise is already checked (meaning it's getting unchecked), remove it
+        // If the exercise is already checked (meaning it's getting unchecked), remove it
         await removeExerciseFromProgram(exerciseId)
+        triggerSuccessMessage('Exercise removed successfully!')
       } else {
-      // If the exercise is not checked (meaning it's getting checked), add it
+        // If the exercise is not checked (meaning it's getting checked), add it
         await addExerciseToProgram(exerciseId)
+        triggerSuccessMessage('Exercise added successfully!')
       }
+
+      // Update the program's exercises in ProgramDetails
       updateExercisesInProgram()
     } catch (error) {
-      console.error('Failed to update program:', error)
+      triggerErrorMessage('Failed to update program')
     }
   }
 
@@ -76,7 +82,6 @@ const ExerciseList = ({ categoryId, programId, updateExercisesInProgram }) => {
       prevSelectedExercises.filter((id) => id !== exerciseId.toString())
     )
 
-    alert('Exercise removed successfully!')
   }
 
   if (loading) {

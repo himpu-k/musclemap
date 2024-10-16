@@ -8,7 +8,6 @@ import {
   CircularProgress,
   List,
   ListItem,
-  Alert,
   IconButton,
   Box,
   Tooltip,
@@ -24,12 +23,12 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import LabelIcon from '@mui/icons-material/Label'
 
 import { useIsMobile } from '../../utils/mediaQueries'
+import { useAlert } from '../../context/AlertContext'
 
 const ProgramList = () => {
+  const { triggerSuccessMessage, triggerErrorMessage } = useAlert()
   const [programs, setPrograms] = useState([]) // State to hold the fetched programs
   const [loading, setLoading] = useState(true) // State to show loading status
-  const [error, setError] = useState(null) // State to handle error
-  const [successMessage, setSuccessMessage] = useState(null) // State for successful deletion alert
   const [openDialog, setOpenDialog] = useState(false) // State to manage the delete confirmation dialog
   const [programToDelete, setProgramToDelete] = useState(null) // State to track which program is to be deleted
 
@@ -43,21 +42,13 @@ const ProgramList = () => {
         setPrograms(fetchedPrograms)
         setLoading(false)
       } catch (err) {
-        setError('Failed to fetch programs')
+        triggerErrorMessage('Failed to fetch program details')
         setLoading(false)
-        clearMessagesAfterTimeout()
       }
     }
 
     fetchPrograms()
-  }, [])
-
-  const clearMessagesAfterTimeout = () => {
-    setTimeout(() => {
-      setError(null)
-      setSuccessMessage(null)
-    }, 3000) // Clears after 3 seconds
-  }
+  }, [triggerErrorMessage])
 
   const handleProgramClick = (id) => {
     const hrefWithId = `/programs/${id}`
@@ -78,13 +69,11 @@ const ProgramList = () => {
     try {
       await programsService.remove(programToDelete.id)
       setPrograms(programs.filter((program) => program.id !== programToDelete.id))
-      setSuccessMessage(`Program "${programToDelete.programName}" deleted successfully`)
+      triggerSuccessMessage(`Program "${programToDelete.programName}" deleted successfully`)
       handleCloseDialog() // Close dialog after successful deletion
-      clearMessagesAfterTimeout()
     } catch (error) {
-      setError('Failed to delete the program')
+      triggerErrorMessage('Failed to delete the program')
       handleCloseDialog()
-      clearMessagesAfterTimeout()
     }
   }
 
@@ -107,20 +96,6 @@ const ProgramList = () => {
         padding: isMobile ? '0 10px' : '0 24px',
       }}
     >
-      {/* Display error alert if there's an error */}
-      {error && (
-        <Alert severity="error" sx={{ marginBottom: 2 }}>
-          {error}
-        </Alert>
-      )}
-
-      {/* Display success alert if a program was deleted */}
-      {successMessage && (
-        <Alert severity="success" sx={{ marginBottom: 2 }}>
-          {successMessage}
-        </Alert>
-      )}
-
       {programs.length === 0 ? (
         <Typography
           variant="body1"
