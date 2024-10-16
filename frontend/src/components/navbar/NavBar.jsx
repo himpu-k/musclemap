@@ -3,16 +3,28 @@ import { AppBar, Toolbar, Typography, Button, IconButton, Box, Tooltip, Menu, Me
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
 import { useNavigate } from 'react-router-dom'
+import programs from '../../services/programs'
+import { useAlert } from '../../context/AlertContext'
 
 const NavBar = ({ setIsLoggedIn }) => {
+  const { triggerErrorMessage, triggerSuccessMessage } = useAlert()
   const navigate = useNavigate()
 
   // State to manage the account menu
   const [anchorEl, setAnchorEl] = useState(null)
   const open = Boolean(anchorEl)
 
-  const handleCreateNewClick = () => {
-    navigate('/exercises')
+  const handleCreateNewClick = async() => {
+    try {
+    // Create a new program with the name "My program"
+      await programs.create({ programName: 'My program' })
+      // Show success message
+      triggerSuccessMessage('New program created successfully!')
+
+    } catch (error) {
+      console.error('Failed to create a new program:', error)
+      triggerErrorMessage('Failed to create a new program.')
+    }
   }
 
   const handleBackToFrontpage = () => {
