@@ -17,8 +17,6 @@ const ProgramDetails = () => {
         const fetchedProgram = await programService.getById(id)
         setProgram(fetchedProgram)
         setLoading(false)
-
-        console.log(fetchedProgram)
       } catch (err) {
         setError('Failed to fetch program details')
         setLoading(false)
@@ -27,6 +25,16 @@ const ProgramDetails = () => {
 
     fetchProgram()
   }, [id])
+
+  // Callback to update the exercises in the program state
+  const updateExercisesInProgram = async () => {
+    try {
+      const updatedProgram = await programService.getById(id)
+      setProgram(updatedProgram) // Update program exercises
+    } catch (error) {
+      console.error('Failed to update program exercises:', error)
+    }
+  }
 
   if (loading) {
     return (
@@ -42,7 +50,7 @@ const ProgramDetails = () => {
   return (
     <Grid container spacing={2}>
       <Grid size={4}>
-        <ExerciseCategories programId={id}/>
+        <ExerciseCategories programId={id} updateExercisesInProgram={updateExercisesInProgram} />
       </Grid>
       <Grid size={8}>
         {error ? (
@@ -50,7 +58,6 @@ const ProgramDetails = () => {
             {error}
           </Alert>
         ) : null}
-
         {program ? (
           <>
             <Typography variant="h4" component="h2" gutterBottom>

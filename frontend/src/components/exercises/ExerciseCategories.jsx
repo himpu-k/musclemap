@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import exerciseService from '../../services/exercises'
 import ExerciseList from './ExerciseList'
 
-const ExerciseCategories = ( { programId }) => {
+const ExerciseCategories = ( { programId, updateExercisesInProgram }) => {
   const [categories, setCategories] = useState([]) // Ensure the initial value is an empty array
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [loading, setLoading] = useState(true) // Add a loading state
@@ -56,7 +56,7 @@ const ExerciseCategories = ( { programId }) => {
       {selectedCategory && (
         <div>
           <h3>Exercises in Selected Category</h3>
-          <ExerciseList categoryId={selectedCategory} programId={programId} />
+          <ExerciseList categoryId={selectedCategory} programId={programId} updateExercisesInProgram={updateExercisesInProgram} />
         </div>
       )}
     </div>

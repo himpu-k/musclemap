@@ -3,7 +3,7 @@ import exerciseService from '../../services/exercises'
 import programService from '../../services/programs'
 import { Box, Checkbox, Typography } from '@mui/material'
 
-const ExerciseList = ({ categoryId, programId }) => {
+const ExerciseList = ({ categoryId, programId, updateExercisesInProgram }) => {
   const [exercises, setExercises] = useState([])
   const [loading, setLoading] = useState(true)
   const [selectedExercises, setSelectedExercises] = useState([])
@@ -33,6 +33,7 @@ const ExerciseList = ({ categoryId, programId }) => {
       // If the exercise is not checked (meaning it's getting checked), add it
         await addExerciseToProgram(exerciseId)
       }
+      updateExercisesInProgram()
     } catch (error) {
       console.error('Failed to update program:', error)
     }
@@ -51,7 +52,8 @@ const ExerciseList = ({ categoryId, programId }) => {
     // Call the service to add the new exercise
     await programService.update(programId, updatedProgram)
 
-    alert('Exercise added successfully!')
+    // Update the selectedExercises state by adding the checked exercise
+    setSelectedExercises([...selectedExercises, exerciseId.toString()])
   }
 
   const removeExerciseFromProgram = async (exerciseId) => {
