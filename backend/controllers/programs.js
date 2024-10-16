@@ -40,7 +40,8 @@ programsRouter.get('/:id', async (request, response) => {
         exercises: null
       }
       response.status(200).json(programDetails)
-    }else{
+    }
+    else {
       // Fetch detailed exercise data from third-party API for each exercise in the program
       const exercisesWithDetails = await Promise.all(
         program.exercises.map(async (exercise) => {

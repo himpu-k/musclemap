@@ -46,7 +46,7 @@ const ProgramDetails = () => {
     const { weight, reps } = updatedSet
 
     // Validation: check if weight and reps are numbers
-    if (isNaN(weight) || isNaN(reps) || weight === '' || reps === '') {
+    if (isNaN(weight) || isNaN(reps)) {
       triggerErrorMessage('Weights and reps must be valid numbers.')
       return
     }
@@ -155,10 +155,16 @@ const ProgramDetails = () => {
                           label="Weight"
                           variant="outlined"
                           size="small"
+                          value={set.weight || ''}
                           slotProps={{
                             inputLabel: {
                               shrink: true,
                             },
+                          }}
+                          onChange={(e) => {
+                            const updatedExercises = [...program.exercises]
+                            updatedExercises[exerciseIndex].sets[setIndex].weight = e.target.value
+                            setProgram({ ...program, exercises: updatedExercises })
                           }}
                           onBlur={(e) => {
                             const updatedSet = { ...set, weight: e.target.value }
@@ -170,10 +176,16 @@ const ProgramDetails = () => {
                           label="Reps"
                           variant="outlined"
                           size="small"
+                          value={set.reps || ''}
                           slotProps={{
                             inputLabel: {
                               shrink: true,
                             },
+                          }}
+                          onChange={(e) => {
+                            const updatedExercises = [...program.exercises]
+                            updatedExercises[exerciseIndex].sets[setIndex].reps = e.target.value
+                            setProgram({ ...program, exercises: updatedExercises })
                           }}
                           onBlur={(e) => {
                             const updatedSet = { ...set, reps: e.target.value }
