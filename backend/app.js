@@ -30,9 +30,11 @@ app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
 app.use(middleware.morganMiddleware)
+app.use(middleware.tokenExtractor)
+
 
 app.use('/api/exercises', exerciseRouter) // Used for third-party API
-app.use('/api/programs', programsRouter)
+app.use('/api/programs', middleware.userExtractor, programsRouter)
 app.use('/api/login', loginRouter)
 app.use('/api/users', usersRouter)
 

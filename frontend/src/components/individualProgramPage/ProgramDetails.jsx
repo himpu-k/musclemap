@@ -9,7 +9,6 @@ import AddIcon from '@mui/icons-material/Add'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
-import SaveIcon from '@mui/icons-material/Save'
 
 const ProgramDetails = () => {
   const { triggerErrorMessage, triggerSuccessMessage } = useAlert()

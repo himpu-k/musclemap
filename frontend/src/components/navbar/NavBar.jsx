@@ -1,32 +1,68 @@
-import React from 'react'
-import { AppBar, Toolbar, Typography, Button, IconButton, Box, Tooltip } from '@mui/material'
+import React, { useState } from 'react'
+import { AppBar, Toolbar, Typography, Button, IconButton, Box, Tooltip, Menu, MenuItem } from '@mui/material'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
+import { useNavigate } from 'react-router-dom'
 
-const handleCreateNewClick = () => {
-  window.location.href = '/exercises'
-}
+const NavBar = ({ setIsLoggedIn }) => {
+  const navigate = useNavigate()
 
-const handleBackToFrontpage = () => {
-  window.location.href = '/'
-}
+  // State to manage the account menu
+  const [anchorEl, setAnchorEl] = useState(null)
+  const open = Boolean(anchorEl)
 
-const NavBar = () => {
+  const handleCreateNewClick = () => {
+    navigate('/exercises')
+  }
+
+  const handleBackToFrontpage = () => {
+    navigate('/')
+  }
+
+  const handleAccountMenuClick = (event) => {
+    setAnchorEl(event.currentTarget)
+  }
+
+  const handleAccountMenuClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleSignOut = () => {
+    // Clear any stored authentication data
+    window.localStorage.removeItem('loggedInUser')
+    setIsLoggedIn(false)
+    // Redirect to login page
+    navigate('/login')
+  }
+
   return (
     <AppBar position="static" sx={{ backgroundColor: '#efa37f' }}>
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <FitnessCenterIcon onClick={() => handleBackToFrontpage()} sx={{ fontSize: 40, marginRight: 3, cursor:'pointer' }} />
-          <Typography onClick={() => handleBackToFrontpage()} variant="h6" component="div" sx={{ flexGrow: 1, marginRight: 3, cursor:'pointer' }}>
+          <FitnessCenterIcon onClick={handleBackToFrontpage} sx={{ fontSize: 40, marginRight: 3, cursor: 'pointer' }} />
+          <Typography onClick={handleBackToFrontpage} variant="h6" component="div" sx={{ flexGrow: 1, marginRight: 3, cursor: 'pointer' }}>
             My programs
           </Typography>
-          <Button onClick={() => handleCreateNewClick()} variant="contained" sx={{ color: '#efa37f', backgroundColor: 'white', ':hover': { backgroundColor: 'lightgray' } }}>New</Button>
+          <Button onClick={handleCreateNewClick} variant="contained" sx={{ color: '#efa37f', backgroundColor: 'white', ':hover': { backgroundColor: 'lightgray' } }}>
+            New
+          </Button>
         </Box>
-        <Tooltip title="Logged in">
-          <IconButton color="inherit">
+
+        {/* Account Circle with Menu */}
+        <Tooltip title="Account options">
+          <IconButton color="inherit" onClick={handleAccountMenuClick}>
             <AccountCircleIcon />
           </IconButton>
         </Tooltip>
+        <Menu
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleAccountMenuClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
+        </Menu>
       </Toolbar>
     </AppBar>
   )
