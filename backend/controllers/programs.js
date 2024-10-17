@@ -7,17 +7,32 @@ const baseUrl = 'https://wger.de/api/v2'
 // Fetch all programs for the authenticated user
 programsRouter.get('/', async (request, response) => {
   const user = request.user
+  if (!user) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
   const programs = await Program.find({ userId: user._id })
   response.json(programs)
 })
 
 // Fetch program details by ID, including exercise details from a third-party API
 programsRouter.get('/:id', async (request, response) => {
+
   try {
     const program = await Program.findById(request.params.id)
 
     if (!program) {
       return response.status(404).json({ error: 'Program not found' })
+    }
+
+    const user = request.user
+    if (!user) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
+    // Ensure the user owns the program
+    if (program.userId.toString() !== user._id.toString()) {
+      return response.status(403).json({ error: 'Permission denied' })
     }
 
     // If no exercises, return the program details without exercise data
@@ -64,6 +79,10 @@ programsRouter.post('/', async (request, response) => {
   const { programName } = request.body
   const user = request.user
 
+  if (!user) {
+    return response.status(401).json({ error: 'token missing or invalid' })
+  }
+
   const program = new Program({
     programName,
     userId: user._id
@@ -87,8 +106,14 @@ programsRouter.put('/:id', async (request, response) => {
       return response.status(404).json({ error: 'Program not found' })
     }
 
+    const user = request.user
+
+    if (!user) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
+
     // Ensure the user owns the program
-    if (program.userId.toString() !== request.user._id.toString()) {
+    if (program.userId.toString() !== user._id.toString()) {
       return response.status(403).json({ error: 'Permission denied' })
     }
 
@@ -116,6 +141,9 @@ programsRouter.delete('/:id', async (request, response) => {
 
     const user = request.user
     // Ensure the user owns the program
+    if (!user) {
+      return response.status(401).json({ error: 'token missing or invalid' })
+    }
     if (program.userId.toString() !== user._id.toString()) {
       return response.status(403).json({ error: 'Permission denied' })
     }

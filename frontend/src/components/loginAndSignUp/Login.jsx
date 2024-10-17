@@ -4,27 +4,22 @@ import { useAlert } from '../../context/AlertContext'
 import login from '../../services/login'
 import programs from '../../services/programs'
 import { useNavigate } from 'react-router-dom'
+import { useUser } from '../../context/UserContext'
 
-const Login = ({ setIsLoggedIn }) => {
+const Login = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const { triggerErrorMessage, triggerSuccessMessage } = useAlert()
   const navigate = useNavigate()
+  const { loginUser } = useUser()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
     try {
       const user = await login({ email, password })
-      console.log('Logged in user:', user)
 
-      // Store the user information in localStorage
-      window.localStorage.setItem('loggedInUser', JSON.stringify(user))
-
-      // Set the token for future API calls
-      programs.setToken(user.token)
-
-      // Update the isLoggedIn state
-      setIsLoggedIn(true)
+      // Update the user in the context
+      loginUser(user)
 
       // Trigger success message
       triggerSuccessMessage(`Welcome ${user.email}`)

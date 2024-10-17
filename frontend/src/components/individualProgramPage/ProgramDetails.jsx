@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import programService from '../../services/programs'
 import { Container, Typography, CircularProgress, Box, TextField, IconButton } from '@mui/material'
 import Grid from '@mui/material/Grid2'
@@ -13,6 +13,7 @@ import EditIcon from '@mui/icons-material/Edit'
 const ProgramDetails = () => {
   const { triggerErrorMessage, triggerSuccessMessage } = useAlert()
   const { id } = useParams() // Get the program ID from the URL params
+  const navigate = useNavigate()
   const [program, setProgram] = useState(null)
   const [loading, setLoading] = useState(true)
   const [savedSetIndex, setSavedSetIndex] = useState(null) // State to track saved sets
@@ -27,13 +28,18 @@ const ProgramDetails = () => {
         setNewProgramName(fetchedProgram.programName) // Initialize with the existing program name
         setLoading(false)
       } catch (err) {
-        triggerErrorMessage('Failed to fetch program details')
+        if (err.response && err.response.status === 403) {
+          triggerErrorMessage('Access denied. Redirecting to home-page.')
+          navigate('/') // Redirect to home if forbidden
+        } else {
+          triggerErrorMessage('Failed to fetch program details')
+        }
         setLoading(false)
       }
     }
 
     fetchProgram()
-  }, [id, triggerErrorMessage])
+  }, [id, triggerErrorMessage, navigate])
 
   // Callback to update the exercises in the program state
   const updateExercisesInProgram = async () => {

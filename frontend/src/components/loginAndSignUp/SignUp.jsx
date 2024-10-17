@@ -1,24 +1,45 @@
 import React, { useState } from 'react'
 import { TextField, Button, Typography, Container, Box, Link } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
+import { useAlert } from '../../context/AlertContext'
+import programs from '../../services/programs'
+import users from '../../services/users'
+import login from '../../services/login'
+import { useUser } from '../../context/UserContext'
 
 const SignUp = () => {
-  const [username, setUsername] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [error, setError] = useState('')
+  const { triggerErrorMessage, triggerSuccessMessage } = useAlert()
   const navigate = useNavigate()
+  const { loginUser } = useUser()
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     if (password !== confirmPassword) {
       setError('Passwords do not match')
       return
     }
-    // Here you can handle registration logic with an API call
-    // On success, redirect to the login page
-    navigate('/login')
+
+    try {
+      // Register the user
+      await users.save({ email, password })
+
+      // Automatically log the user in after sign-up
+      const user = await login({ email, password })
+      loginUser(user)
+
+      // Trigger success message
+      triggerSuccessMessage(`Welcome ${user.email}!`)
+
+      // Redirect to the homepage
+      navigate('/')
+    } catch (exception) {
+      console.error('Sign up failed:', exception)
+      triggerErrorMessage('Failed to sign up')
+    }
   }
 
   return (
