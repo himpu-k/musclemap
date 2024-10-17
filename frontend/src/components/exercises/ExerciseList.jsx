@@ -15,7 +15,9 @@ const ExerciseList = ({ categoryId, programId, updateExercisesInProgram }) => {
 
       // Fetch program details and set the selected exercises
       const programData = await programService.getById(programId)
-      const programExerciseIds = programData.exercises.map(ex => ex.apiId)
+      console.log(programData)
+      // Check if programData.exercises exists before mapping over it
+      const programExerciseIds = programData.exercises ? programData.exercises.map(ex => ex.apiId) : []
       setSelectedExercises(programExerciseIds)
 
       const exerciseData = await exerciseService.getExercisesFromCategory(categoryId)

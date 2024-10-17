@@ -8,7 +8,6 @@ const ProtectedRoute = ({ children }) => {
   const [tokenSet, setTokenSet] = useState(false)
 
   useEffect(() => {
-    console.log('User:', user)
     if(user) {
       programs.setToken(user.token)
       setTokenSet(true)
