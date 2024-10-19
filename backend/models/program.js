@@ -17,6 +17,7 @@ const programSchema = new mongoose.Schema({
   exercises: [
     {
       apiId: String, // ID from external API
+      name: String,  // For user-created exercises (optional)
       sets: [
         {
           setNumber: Number,

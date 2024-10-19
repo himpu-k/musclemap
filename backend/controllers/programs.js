@@ -47,17 +47,26 @@ programsRouter.get('/:id', async (request, response) => {
     // Fetch exercise details from the third-party API for each exercise in the program
     const exercisesWithDetails = await Promise.all(
       program.exercises.map(async (exercise) => {
-        try {
-          const exerciseDetails = await axios.get(`${baseUrl}/exercisebaseinfo/${exercise.apiId}`)
-          const englishExercise = exerciseDetails.data.exercises.find(ex => ex.language === 2)
+        if (exercise.apiId) {
+          // Fetch exercise details from the external API
+          try {
+            const exerciseDetails = await axios.get(`${baseUrl}/exercisebaseinfo/${exercise.apiId}`)
+            const englishExercise = exerciseDetails.data.exercises.find(ex => ex.language === 2)
+            return {
+              apiId: exercise.apiId,
+              name: englishExercise ? englishExercise.name : null,
+              sets: exercise.sets
+            }
+          } catch (error) {
+            console.error(`Failed to fetch details for exercise ID ${exercise.apiId}:`, error)
+            return { error: `Failed to fetch details for exercise ID ${exercise.apiId}` }
+          }
+        } else {
+          // Return the user-created exercise
           return {
-            apiId: exercise.apiId,
-            name: englishExercise ? englishExercise.name : null,
+            name: exercise.name,
             sets: exercise.sets
           }
-        } catch (error) {
-          console.error(`Failed to fetch details for exercise ID ${exercise.apiId}:`, error)
-          return { error: `Failed to fetch details for exercise ID ${exercise.apiId}` }
         }
       })
     )
@@ -107,7 +116,6 @@ programsRouter.put('/:id', async (request, response) => {
     }
 
     const user = request.user
-
     if (!user) {
       return response.status(401).json({ error: 'token missing or invalid' })
     }

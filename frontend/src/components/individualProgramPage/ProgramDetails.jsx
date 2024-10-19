@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import programService from '../../services/programs'
-import { Container, Typography, CircularProgress, Box, TextField, IconButton } from '@mui/material'
+import { Container, Typography, CircularProgress, Box, TextField, IconButton, Button } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import ExerciseCategories from '../exercises/ExerciseCategories'
 import { useAlert } from '../../context/AlertContext'
@@ -19,6 +19,8 @@ const ProgramDetails = () => {
   const [savedSetIndex, setSavedSetIndex] = useState(null) // State to track saved sets
   const [editMode, setEditMode] = useState(false) // Track whether we're editing the program name
   const [newProgramName, setNewProgramName] = useState('') // Track the new program name while editing
+  const [customExerciseName, setCustomExerciseName] = useState('') // Track the name of the new custom exercise
+  const [showCustomExerciseInput, setShowCustomExerciseInput] = useState(false) // Track whether to show input for custom exercise
 
   useEffect(() => {
     const fetchProgram = async () => {
@@ -64,6 +66,39 @@ const ProgramDetails = () => {
       triggerSuccessMessage('Program name updated successfully!')
     } catch (error) {
       triggerErrorMessage('Failed to update program name.')
+    }
+  }
+
+  // Handle adding a custom exercise
+  const handleAddCustomExercise = async () => {
+    if (!customExerciseName.trim()) {
+      triggerErrorMessage('Exercise name cannot be empty')
+      return
+    }
+
+    const newExercise = {
+      name: customExerciseName,  // Custom exercise without apiId
+      sets: [] // New exercise starts with no sets
+    }
+
+    // Initialize exercises array if it doesn't exist
+    const exercises = program.exercises ? [...program.exercises] : []
+
+    // Add the new exercise to the exercises array
+    const updatedProgram = {
+      ...program,
+      exercises: [...exercises, newExercise]
+    }
+
+    // Save the updated program to the backend
+    try {
+      await programService.update(id, updatedProgram)
+      setProgram(updatedProgram)
+      setCustomExerciseName('')
+      setShowCustomExerciseInput(false)
+      triggerSuccessMessage('Custom exercise added successfully!')
+    } catch (error) {
+      triggerErrorMessage('Failed to add custom exercise.')
     }
   }
 
@@ -261,6 +296,28 @@ const ProgramDetails = () => {
                 ))
               ) : (
                 <Typography>No exercises found for this program.</Typography>
+              )}
+
+              {/* Button to toggle adding custom exercise */}
+              {!showCustomExerciseInput && (
+                <Button onClick={() => setShowCustomExerciseInput(true)} variant="outlined" sx={{ marginTop: 2 }}>
+                  Add Custom Exercise
+                </Button>
+              )}
+
+              {/* Input and button to add a new custom exercise */}
+              {showCustomExerciseInput && (
+                <Box display="flex" alignItems="center" sx={{ marginTop: 2 }}>
+                  <TextField
+                    label="Custom Exercise Name"
+                    value={customExerciseName}
+                    onChange={(e) => setCustomExerciseName(e.target.value)}
+                    sx={{ marginRight: 2 }}
+                  />
+                  <Button onClick={handleAddCustomExercise} variant="contained">
+                    Add Exercise
+                  </Button>
+                </Box>
               )}
             </Box>
           </>
