@@ -85,7 +85,7 @@ programsRouter.get('/:id', async (request, response) => {
 
 // Create a new program for the authenticated user
 programsRouter.post('/', async (request, response) => {
-  const { programName } = request.body
+  const { programName, exercises } = request.body
   const user = request.user
 
   if (!user) {
@@ -94,15 +94,23 @@ programsRouter.post('/', async (request, response) => {
 
   const program = new Program({
     programName,
-    userId: user._id
+    userId: user._id,
+    exercises: exercises || []
   })
 
-  const savedProgram = await program.save()
+  try {
+    // Save the new program to the database
+    const savedProgram = await program.save()
 
-  // Add the program to the user's list of programs
-  user.programs = user.programs.concat(savedProgram._id)
-  await user.save()
-  response.status(201).json(savedProgram)
+    // Add the program to the user's list of programs
+    user.programs = user.programs.concat(savedProgram._id)
+    await user.save()
+
+    response.status(201).json(savedProgram)
+  } catch (error) {
+    console.error('Error creating program:', error)
+    response.status(500).json({ error: 'Failed to create program' })
+  }
 })
 
 // Update a program by ID for the authenticated user
