@@ -1,5 +1,7 @@
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState, useContext, useEffect } from 'react'
 import programs from '../services/programs'
+import { jwtDecode } from 'jwt-decode'
+import history from '../history' // Import custom history object
 
 // Create a context for the user
 const UserContext = createContext()
@@ -12,6 +14,27 @@ export const useUser = () => {
 // Create a provider component
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(JSON.parse(window.localStorage.getItem('loggedInUser')) || null)
+
+  const checkTokenExpiration = () => {
+    const loggedInUser = JSON.parse(window.localStorage.getItem('loggedInUser'))
+    if (loggedInUser) {
+      const { token } = loggedInUser
+      const { exp } = jwtDecode(token)
+      const expirationTime = exp * 1000
+
+      if (Date.now() >= expirationTime) {
+        logoutUser()
+        history.push('/login')
+      } else {
+        programs.setToken(token)
+        setUser(loggedInUser)
+      }
+    }
+  }
+
+  useEffect(() => {
+    checkTokenExpiration()
+  }, [])
 
   const loginUser = (userData) => {
     // Save user data to localStorage

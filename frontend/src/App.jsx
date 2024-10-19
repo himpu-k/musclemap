@@ -3,6 +3,7 @@ import ProgramDetails from './components/individualProgramPage/ProgramDetails'
 import ProgramList from './components/myprogramsPage/ProgramList'
 import NavBar from './components/navbar/NavBar'
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
+import history from './history'
 import TopAlert from './components/generalComponents/TopAlert'
 import { AlertProvider } from './context/AlertContext'
 import Login from './components/loginAndSignUp/Login'
@@ -14,7 +15,7 @@ const App = () => {
   return (
     <UserProvider>
       <AlertProvider>
-        <Router>
+        <Router history={history}>
           <NavBar />
           <TopAlert />
           <Routes>
