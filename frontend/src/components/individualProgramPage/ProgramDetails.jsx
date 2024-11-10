@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
+import OrangeButton from '../generalComponents/OrangeButton'
 
 const ProgramDetails = () => {
   const { triggerErrorMessage, triggerSuccessMessage } = useAlert()
@@ -298,9 +299,9 @@ const ProgramDetails = () => {
               )}
             </Box>
             {/*Button to open the side bar for editing*/}
-            {<Button onClick={() => setEditProgram(true)} variant="contained">
+            {<OrangeButton onClick={() => setEditProgram(true)} variant="contained">
                 Edit
-            </Button>}
+            </OrangeButton>}
           </>
         ) : (
           <Typography>Program not found.</Typography>
@@ -440,9 +441,9 @@ const ProgramDetails = () => {
               )}
             </Box>
             {/*Button to open the side bar for editing*/}
-            {<Button onClick={() => setEditProgram(false)} variant="contained">
+            {<OrangeButton onClick={() => setEditProgram(false)} variant="contained">
                 Done
-            </Button>}
+            </OrangeButton>}
           </>
         ) : (
           <Typography>Program not found.</Typography>
