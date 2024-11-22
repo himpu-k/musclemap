@@ -3,6 +3,10 @@ import exerciseService from '../../services/exercises'
 import programService from '../../services/programs'
 import { Box, Checkbox, Typography, Alert } from '@mui/material'
 import { useAlert } from '../../context/AlertContext'
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import Divider from '@mui/material/Divider';
+import MoreInfoPopUp from './MoreInfoPopUp'
 
 const ExerciseList = ({ categoryId, programId, updateExercisesInProgram }) => {
   const { triggerSuccessMessage, triggerErrorMessage } = useAlert()
@@ -94,7 +98,7 @@ const ExerciseList = ({ categoryId, programId, updateExercisesInProgram }) => {
     <div>
       <ul>
         {exercises.map((exercise) => (
-          <li key={exercise.id}>
+          <List key={exercise.id}>
             <Box display="flex" alignItems="center" mb={2}>
               <Checkbox
                 checked={selectedExercises.includes(exercise.id.toString())}
@@ -103,35 +107,13 @@ const ExerciseList = ({ categoryId, programId, updateExercisesInProgram }) => {
               <Typography variant="h6" sx={{ ml: 1 }}>
                 {exercise.exercises[0].name}
               </Typography>
+              
             </Box>
-            <p>Equipment: {exercise.equipment.map((equip) => equip.name).join(', ')}</p>
-
-            {/* Display images if available */}
-            {exercise.images.length > 0 && (
-              <div>
-                <h5>Images:</h5>
-                <img
-                  src={exercise.images[0].image}
-                  alt={`Exercise ${exercise.exercises[0].name}`}
-                  width="150"
-                  style={{ marginRight: '10px' }}
-                />
-              </div>
-            )}
-
-            {/* Display only the first video if available */}
-            {exercise.videos.length > 0 && (
-              <div>
-                <h5>Video:</h5>
-                <video width="320" height="240" controls>
-                  <source src={exercise.videos[0].video} type="video/mp4" />
-                  Your browser does not support the video tag.
-                </video>
-              </div>
-            )
-            }
+            <Box ml={25} mt={0.10}>
+              <MoreInfoPopUp exercise={exercise}/>
+            </Box>
             <br />
-          </li>
+          </List>
         ))}
       </ul>
     </div>
