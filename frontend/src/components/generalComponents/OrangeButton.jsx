@@ -2,10 +2,10 @@ import { styled } from '@mui/material/styles'
 import Button from '@mui/material/Button'
 
 const OrangeButton = styled(Button)({
-  backgroundColor: '#E46225', // Custom background color
-  color: '#FFFFFF', //cutom text color
+  backgroundColor: '#E46225', // custom background color
+  color: '#FFFFFF', //custom text color
   '&:hover': {
-    backgroundColor: '#913A12', // cutom hover color
+    backgroundColor: '#913A12', // custom hover color
   },
 })
 
