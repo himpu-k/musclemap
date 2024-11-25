@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useState, useRef } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import programService from '../../services/programs'
 import { Container, Typography, CircularProgress, Box, TextField, IconButton, Button } from '@mui/material'
 import Grid from '@mui/material/Grid2'
@@ -9,6 +9,7 @@ import AddIcon from '@mui/icons-material/Add'
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
+import OrangeButton from '../generalComponents/OrangeButton'
 
 const ProgramDetails = () => {
   const { triggerErrorMessage, triggerSuccessMessage } = useAlert()
@@ -21,6 +22,19 @@ const ProgramDetails = () => {
   const [newProgramName, setNewProgramName] = useState('') // Track the new program name while editing
   const [customExerciseName, setCustomExerciseName] = useState('') // Track the name of the new custom exercise
   const [showCustomExerciseInput, setShowCustomExerciseInput] = useState(false) // Track whether to show input for custom exercise
+  const isInitialized = useRef(false); // Tracks if initialization is complete
+
+  // Extract "mode" from query parameters
+  const searchParams = new URLSearchParams(location.search);
+  const initialMode = searchParams.get('mode') || 'view';
+
+  const [isEditMode, setIsEditMode] = useState(initialMode === 'edit') // Track whether we're editing the program (adding or removing exercises)
+
+  //Change between edit and view modes
+  const toggleMode = (mode) => {
+    setIsEditMode(mode === 'edit');
+    navigate(`/programs/${id}?mode=${mode}`); // Update the URL to reflect the current mode
+  };
 
   useEffect(() => {
     const fetchProgram = async () => {
@@ -191,9 +205,127 @@ const ProgramDetails = () => {
     )
   }
 
+  //show only program
+  if (!isEditMode) {
+    return (
+      <div style={{ marginLeft: 4, marginTop:2 }}>
+        {program ? (
+          <>
+            <Box display="flex" alignItems="center"  sx={{ marginBottom: 2, marginTop: 2 }}>
+              {editMode ? (
+                <>
+                  <TextField
+                    label="Program Name"
+                    value={newProgramName}
+                    onChange={(e) => setNewProgramName(e.target.value)}
+                    sx={{ marginRight: 2 }}
+                  />
+                  <IconButton onClick={handleSaveProgramName}>
+                    <CheckCircleIcon />
+                  </IconButton>
+                </>
+              ) : (
+                <>
+                  <Typography variant="h4" component="h2" gutterBottom>
+                    {program.programName}
+                  </Typography>
+                  <IconButton onClick={() => setEditMode(true)} sx={{ marginLeft: 2 }}>
+                    <EditIcon />
+                  </IconButton>
+                </>
+              )}
+            </Box>
+            <Box>
+              <Typography variant="h6">Exercises:</Typography>
+              {program.exercises && program.exercises.length > 0 ? (
+                program.exercises.map((exercise, exerciseIndex) => (
+                  <Box key={exerciseIndex} sx={{ marginBottom: 2 }}>
+                    <Typography variant="h6" sx={{ marginBottom: 2 }}>{exercise.name}</Typography>
+
+                    {exercise.sets && exercise.sets.length > 0 && exercise.sets.map((set, setIndex) => (
+                      <Box key={setIndex} sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 2 }}>
+                        <Typography>Set {set.setNumber}:</Typography>
+                        <TextField
+                          label="Weight"
+                          variant="outlined"
+                          size="small"
+                          value={set.weight || ''}
+                          slotProps={{
+                            inputLabel: {
+                              shrink: true,
+                            },
+                          }}
+                          onChange={(e) => {
+                            const updatedExercises = [...program.exercises]
+                            updatedExercises[exerciseIndex].sets[setIndex].weight = e.target.value
+                            setProgram({ ...program, exercises: updatedExercises })
+                          }}
+                          onBlur={(e) => {
+                            const updatedSet = { ...set, weight: e.target.value }
+                            handleSaveSet(exerciseIndex, setIndex, updatedSet)
+                          }}
+                          sx={{ width: 80 }}
+                        />
+                        <TextField
+                          label="Reps"
+                          variant="outlined"
+                          size="small"
+                          value={set.reps || ''}
+                          slotProps={{
+                            inputLabel: {
+                              shrink: true,
+                            },
+                          }}
+                          onChange={(e) => {
+                            const updatedExercises = [...program.exercises]
+                            updatedExercises[exerciseIndex].sets[setIndex].reps = e.target.value
+                            setProgram({ ...program, exercises: updatedExercises })
+                          }}
+                          onBlur={(e) => {
+                            const updatedSet = { ...set, reps: e.target.value }
+                            handleSaveSet(exerciseIndex, setIndex, updatedSet)
+                          }}
+                          sx={{ width: 80 }}
+                        />
+
+                        {/* Button to remove set */}
+                        <IconButton onClick={() => handleRemoveSet(exerciseIndex, setIndex)}>
+                          <DeleteIcon/>
+                        </IconButton>
+
+                        {/* Show checkmark if set was saved */}
+                        {savedSetIndex?.exerciseIndex === exerciseIndex && savedSetIndex?.setIndex === setIndex && (
+                          <CheckCircleIcon color="success" />
+                        )}
+                      </Box>
+                    ))}
+
+                    {/* Button to add a new set */}
+                    <IconButton onClick={() => handleAddSet(exerciseIndex)}>
+                      <AddIcon />
+                    </IconButton>
+                  </Box>
+                ))
+              ) : (
+                <Typography>No exercises found for this program.</Typography>
+              )}
+            </Box>
+            {/*Button to open the side bar for editing*/}
+            {<OrangeButton onClick={() => toggleMode('edit')} variant="contained">
+                Edit
+            </OrangeButton>}
+          </>
+        ) : (
+          <Typography>Program not found.</Typography>
+        )}
+      </div>
+    )
+  }
+
+  //show program editing side bar also
   return (
     <Grid container spacing={2}>
-      <Grid size={4}>
+      <Grid className="exerciseList" size={4}>
         <ExerciseCategories programId={id} updateExercisesInProgram={updateExercisesInProgram} />
       </Grid>
       <Grid size={8}>
@@ -320,6 +452,10 @@ const ProgramDetails = () => {
                 </Box>
               )}
             </Box>
+            {/*Button to open the side bar for editing*/}
+            {<OrangeButton onClick={() => toggleMode('view')} variant="contained">
+                Done
+            </OrangeButton>}
           </>
         ) : (
           <Typography>Program not found.</Typography>
