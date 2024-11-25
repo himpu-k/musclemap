@@ -52,12 +52,21 @@ const ProgramList = () => {
     fetchPrograms()
   }, [triggerErrorMessage])
 
-  const handleProgramClick = (id) => {
-    // const hrefWithId = `/programs/${id}`
-    // window.location.href = hrefWithId
-    const hrefWithId = `/programs/${id}`
-    navigate(hrefWithId, { state: { editMode: true } });
-  }
+  // const handleProgramClick = (id) => {
+  //   // const hrefWithId = `/programs/${id}`
+  //   // window.location.href = hrefWithId
+  //   const hrefWithId = `/programs/${id}`
+  //   navigate(hrefWithId, { state: { editMode: true } });
+  // }
+
+  // const handleProgramEditClick = (id) => {
+  //   const hrefWithId = `/programs/${id}`
+  //   navigate(hrefWithId, { state: { editMode: false } });
+  // }
+
+  const handleProgramClick = (id, mode) => {
+    navigate(`/programs/${id}?mode=${mode}`); // Pass "view" or "edit" as a query parameter
+  };
 
   const handleOpenDialog = (program) => {
     setProgramToDelete(program)
@@ -79,11 +88,6 @@ const ProgramList = () => {
       triggerErrorMessage('Failed to delete the program')
       handleCloseDialog()
     }
-  }
-
-  const handleProgramEditClick = (id) => {
-    const hrefWithId = `/programs/${id}`
-    navigate(hrefWithId, { state: { editMode: false } });
   }
 
   if (loading) {
@@ -137,7 +141,7 @@ const ProgramList = () => {
               >
                 <CardContent
                   sx={{ flexGrow: 1 }}
-                  onClick={() => handleProgramClick(program.id)}
+                  onClick={() => handleProgramClick(program.id, "view")}
                 >
                   <Typography
                     variant="h6"
@@ -152,7 +156,7 @@ const ProgramList = () => {
 
                 <Box sx={{ display: 'flex', gap: 1 }}>
                   <Tooltip title="View program">
-                    <IconButton aria-label="view" onClick={() => handleProgramClick(program.id)}>
+                    <IconButton aria-label="view" onClick={() => handleProgramClick(program.id, "view")}>
                       <LabelIcon />
                     </IconButton>
                   </Tooltip>
@@ -162,7 +166,7 @@ const ProgramList = () => {
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Edit program">
-                    <IconButton aria-label="edit" onClick={() => handleProgramEditClick(program.id)}>
+                    <IconButton aria-label="edit" onClick={() => handleProgramClick(program.id, "edit")}>
                       <EditIcon />
                     </IconButton>
                   </Tooltip>

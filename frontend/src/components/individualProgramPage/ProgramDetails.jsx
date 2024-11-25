@@ -19,20 +19,22 @@ const ProgramDetails = () => {
   const [loading, setLoading] = useState(true)
   const [savedSetIndex, setSavedSetIndex] = useState(null) // State to track saved sets
   const [editMode, setEditMode] = useState(false) // Track whether we're editing the program name
-  const [editProgram, setEditProgram] = useState(null) // Track whether we're editing the program (adding or removing exercises)
   const [newProgramName, setNewProgramName] = useState('') // Track the new program name while editing
   const [customExerciseName, setCustomExerciseName] = useState('') // Track the name of the new custom exercise
   const [showCustomExerciseInput, setShowCustomExerciseInput] = useState(false) // Track whether to show input for custom exercise
   const isInitialized = useRef(false); // Tracks if initialization is complete
-  const location = useLocation();
 
-  useEffect(() => {
-    if (!isInitialized.current) {
-      const passedEditMode = location.state?.editMode || false; // Default to false if not passed
-      setEditProgram(passedEditMode);
-      isInitialized.current = true; // Prevent re-initialization
-    }
-  }, [location.state]);
+  // Extract "mode" from query parameters
+  const searchParams = new URLSearchParams(location.search);
+  const initialMode = searchParams.get('mode') || 'view';
+
+  const [isEditMode, setIsEditMode] = useState(initialMode === 'edit') // Track whether we're editing the program (adding or removing exercises)
+
+  //Change between edit and view modes
+  const toggleMode = (mode) => {
+    setIsEditMode(mode === 'edit');
+    navigate(`/programs/${id}?mode=${mode}`); // Update the URL to reflect the current mode
+  };
 
   useEffect(() => {
     const fetchProgram = async () => {
@@ -204,7 +206,7 @@ const ProgramDetails = () => {
   }
 
   //show only program
-  if (editProgram) {
+  if (!isEditMode) {
     return (
       <div style={{ marginLeft: 4, marginTop:2 }}>
         {program ? (
@@ -309,7 +311,7 @@ const ProgramDetails = () => {
               )}
             </Box>
             {/*Button to open the side bar for editing*/}
-            {<OrangeButton onClick={() => setEditProgram(true)} variant="contained">
+            {<OrangeButton onClick={() => toggleMode('edit')} variant="contained">
                 Edit
             </OrangeButton>}
           </>
@@ -451,7 +453,7 @@ const ProgramDetails = () => {
               )}
             </Box>
             {/*Button to open the side bar for editing*/}
-            {<OrangeButton onClick={() => setEditProgram(false)} variant="contained">
+            {<OrangeButton onClick={() => toggleMode('view')} variant="contained">
                 Done
             </OrangeButton>}
           </>
