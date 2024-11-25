@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import programsService from '../../services/programs'
+import { useNavigate } from 'react-router-dom'
 import {
   Container,
   Typography,
@@ -32,6 +33,7 @@ const ProgramList = () => {
   const [openDialog, setOpenDialog] = useState(false) // State to manage the delete confirmation dialog
   const [programToDelete, setProgramToDelete] = useState(null) // State to track which program is to be deleted
 
+  const navigate = useNavigate()
   const isMobile = useIsMobile()
 
   // Fetch the programs when the component mounts
@@ -51,8 +53,10 @@ const ProgramList = () => {
   }, [triggerErrorMessage])
 
   const handleProgramClick = (id) => {
+    // const hrefWithId = `/programs/${id}`
+    // window.location.href = hrefWithId
     const hrefWithId = `/programs/${id}`
-    window.location.href = hrefWithId
+    navigate(hrefWithId, { state: { editMode: true } });
   }
 
   const handleOpenDialog = (program) => {
@@ -75,6 +79,11 @@ const ProgramList = () => {
       triggerErrorMessage('Failed to delete the program')
       handleCloseDialog()
     }
+  }
+
+  const handleProgramEditClick = (id) => {
+    const hrefWithId = `/programs/${id}`
+    navigate(hrefWithId, { state: { editMode: false } });
   }
 
   if (loading) {
@@ -153,7 +162,7 @@ const ProgramList = () => {
                     </IconButton>
                   </Tooltip>
                   <Tooltip title="Edit program">
-                    <IconButton aria-label="edit">
+                    <IconButton aria-label="edit" onClick={() => handleProgramEditClick(program.id)}>
                       <EditIcon />
                     </IconButton>
                   </Tooltip>

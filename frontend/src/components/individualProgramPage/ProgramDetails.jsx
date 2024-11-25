@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import { useNavigate, useParams } from 'react-router-dom'
+import React, { useEffect, useState, useRef } from 'react'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import programService from '../../services/programs'
 import { Container, Typography, CircularProgress, Box, TextField, IconButton, Button } from '@mui/material'
 import Grid from '@mui/material/Grid2'
@@ -19,10 +19,20 @@ const ProgramDetails = () => {
   const [loading, setLoading] = useState(true)
   const [savedSetIndex, setSavedSetIndex] = useState(null) // State to track saved sets
   const [editMode, setEditMode] = useState(false) // Track whether we're editing the program name
-  const [editProgram, setEditProgram] = useState(false) // Track whether we're editing the program name
+  const [editProgram, setEditProgram] = useState(null) // Track whether we're editing the program (adding or removing exercises)
   const [newProgramName, setNewProgramName] = useState('') // Track the new program name while editing
   const [customExerciseName, setCustomExerciseName] = useState('') // Track the name of the new custom exercise
   const [showCustomExerciseInput, setShowCustomExerciseInput] = useState(false) // Track whether to show input for custom exercise
+  const isInitialized = useRef(false); // Tracks if initialization is complete
+  const location = useLocation();
+
+  useEffect(() => {
+    if (!isInitialized.current) {
+      const passedEditMode = location.state?.editMode || false; // Default to false if not passed
+      setEditProgram(passedEditMode);
+      isInitialized.current = true; // Prevent re-initialization
+    }
+  }, [location.state]);
 
   useEffect(() => {
     const fetchProgram = async () => {
@@ -194,7 +204,7 @@ const ProgramDetails = () => {
   }
 
   //show only program
-  if (!editProgram) {
+  if (editProgram) {
     return (
       <div style={{ marginLeft: 4, marginTop:2 }}>
         {program ? (
@@ -313,7 +323,7 @@ const ProgramDetails = () => {
   //show program editing side bar also
   return (
     <Grid container spacing={2}>
-      <Grid classname="exerciseList" size={4}>
+      <Grid className="exerciseList" size={4}>
         <ExerciseCategories programId={id} updateExercisesInProgram={updateExercisesInProgram} />
       </Grid>
       <Grid size={8}>
