@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { TextField, Button, Typography, Container, Box, Link } from '@mui/material'
+import { TextField, Typography, Container, Box, Link } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { useAlert } from '../../context/AlertContext'
 import programs from '../../services/programs'
 import users from '../../services/users'
 import login from '../../services/login'
 import { useUser } from '../../context/UserContext'
+import OrangeButton from '../generalComponents/OrangeButton'
 
 const SignUp = () => {
   const [email, setEmail] = useState('')
@@ -80,7 +81,7 @@ const SignUp = () => {
               {error}
             </Typography>
           )}
-          <Button
+          <OrangeButton
             type="submit"
             variant="contained"
             color="primary"
@@ -88,11 +89,11 @@ const SignUp = () => {
             sx={{ marginTop: 2, marginBottom: 2 }}
           >
             Sign up
-          </Button>
+          </OrangeButton>
         </form>
         <Typography variant="body2">
           Already have an account?{' '}
-          <Link href="/login" underline="hover">
+          <Link href="/login" underline="hover" sx={{ color: '#E46225', '&:hover': {color: '#E46225'}}}>
             Sign in
           </Link>
         </Typography>

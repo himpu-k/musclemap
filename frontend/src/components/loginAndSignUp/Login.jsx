@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
-import { TextField, Button, Typography, Container, Box, Link } from '@mui/material'
+import { TextField, Typography, Container, Box, Link } from '@mui/material'
 import { useAlert } from '../../context/AlertContext'
 import login from '../../services/login'
 import { useNavigate } from 'react-router-dom'
 import { useUser } from '../../context/UserContext'
+import OrangeButton from '../generalComponents/OrangeButton'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -52,13 +53,13 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
+          <OrangeButton type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
             Sign in
-          </Button>
+          </OrangeButton>
         </form>
         <Typography variant="body2">
           Do not have an account yet?{' '}
-          <Link href="/signup" underline="hover">Sign up</Link>
+          <Link href="/signup" underline="hover" sx={{ color: '#E46225', '&:hover': {color: '#E46225'}}}>Sign up</Link>
         </Typography>
       </Box>
     </Container>
