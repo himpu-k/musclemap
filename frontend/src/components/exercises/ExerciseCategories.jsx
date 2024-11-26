@@ -63,10 +63,10 @@ const ExerciseCategories = ( { programId, updateExercisesInProgram }) => {
                     sx={{ 
                         cursor: 'pointer',
                         py: 0,
-                        backgroundColor: selectedIndex === index ? '#ffcc99' : 'transparent', 
+                        backgroundColor: selectedIndex === index ? '#efa37f' : 'transparent', 
                         fontWeight: selectedIndex === index ? 'bold' : 'normal', 
                         '&:hover': {
-                          backgroundColor: selectedIndex === index ? '#ffcc99' : '#ffe0b3', 
+                          backgroundColor: selectedIndex === index ? '#efa37f' : '#efa37f', 
                          },
                          }}>
                     {category.name} 

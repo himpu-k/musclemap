@@ -52,18 +52,6 @@ const ProgramList = () => {
     fetchPrograms()
   }, [triggerErrorMessage])
 
-  // const handleProgramClick = (id) => {
-  //   // const hrefWithId = `/programs/${id}`
-  //   // window.location.href = hrefWithId
-  //   const hrefWithId = `/programs/${id}`
-  //   navigate(hrefWithId, { state: { editMode: true } });
-  // }
-
-  // const handleProgramEditClick = (id) => {
-  //   const hrefWithId = `/programs/${id}`
-  //   navigate(hrefWithId, { state: { editMode: false } });
-  // }
-
   const handleProgramClick = (id, mode) => {
     navigate(`/programs/${id}?mode=${mode}`); // Pass "view" or "edit" as a query parameter
   };
