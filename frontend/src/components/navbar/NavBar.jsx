@@ -2,6 +2,9 @@ import React, { useState } from 'react'
 import { AppBar, Toolbar, Typography, Button, IconButton, Box, Tooltip, Menu, MenuItem } from '@mui/material'
 import AccountCircleIcon from '@mui/icons-material/AccountCircle'
 import FitnessCenterIcon from '@mui/icons-material/FitnessCenter'
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import CopyAllIcon from '@mui/icons-material/CopyAll';
 import { useNavigate, useLocation } from 'react-router-dom' // Import useLocation for route info
 import programs from '../../services/programs'
 import { useAlert } from '../../context/AlertContext'
@@ -12,6 +15,7 @@ const NavBar = () => {
   const navigate = useNavigate()
   const location = useLocation() // Hook to access the current URL
   const { user, logoutUser } = useUser()
+  const isMobile = window.innerWidth < 900 //if the screen is smaller than 900 px true
 
   // Extract the program ID from the URL if present
   const pathParts = location.pathname.split('/')
@@ -84,37 +88,78 @@ const NavBar = () => {
       <Toolbar sx={{ justifyContent: 'space-between' }}>
         {user ? (
           <>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <FitnessCenterIcon onClick={handleBackToFrontpage} sx={{ fontSize: 40, marginRight: 3, cursor: 'pointer' }} />
-              <Typography onClick={handleBackToFrontpage} variant="h6" component="div" sx={{ flexGrow: 1, marginRight: 3, cursor: 'pointer' }}>
-                My programs
-              </Typography>
-              <Button onClick={handleCreateNewClick} variant="contained" sx={{ color: '#efa37f', backgroundColor: 'white', ':hover': { backgroundColor: 'lightgray' } }}>
-                New
-              </Button>
-              {id && (
-                <Button onClick={handleCopyProgram} variant="contained" sx={{ marginLeft: 2, color: '#efa37f', backgroundColor: 'white', ':hover': { backgroundColor: 'lightgray' } }}>
-                  Copy Program
-                </Button>
-              )}
-            </Box>
+            {isMobile ? (
+              <>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <FitnessCenterIcon onClick={handleBackToFrontpage} sx={{ fontSize: 40, marginRight: 3, cursor: 'pointer' }} />
+                  <Tooltip title="My programs page">
+                    <IconButton color="inherit" onClick={handleBackToFrontpage}>
+                      <FormatListBulletedIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Create new program">
+                    <IconButton color="inherit" onClick={handleCreateNewClick}>
+                      <AddBoxIcon />
+                    </IconButton>
+                  </Tooltip>
+                  {id && (
+                    <IconButton color="inherit" onClick={handleCopyProgram}>
+                      <CopyAllIcon />
+                    </IconButton>
+                  )}
+                </Box>
 
-            <Tooltip title="Account options">
-              <IconButton color="inherit" onClick={handleAccountMenuClick}>
-                <AccountCircleIcon />
-              </IconButton>
-            </Tooltip>
+                <Tooltip title="Account options">
+                  <IconButton color="inherit" onClick={handleAccountMenuClick}>
+                    <AccountCircleIcon />
+                  </IconButton>
+                </Tooltip>
 
-            <Menu
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleAccountMenuClose}
-              anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-              transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-            >
-              <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
-            </Menu>
-          </>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleAccountMenuClose}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
+                </Menu>
+              </>
+            ) : (
+              <>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <FitnessCenterIcon onClick={handleBackToFrontpage} sx={{ fontSize: 40, marginRight: 3, cursor: 'pointer' }} />
+                  <Typography onClick={handleBackToFrontpage} variant="h6" component="div" sx={{ flexGrow: 1, marginRight: 3, cursor: 'pointer' }}>
+                    My programs
+                  </Typography>
+                  <Button onClick={handleCreateNewClick} variant="contained" sx={{ color: '#efa37f', backgroundColor: 'white', ':hover': { backgroundColor: 'lightgray' } }}>
+                    New
+                  </Button>
+                  {id && (
+                    <Button onClick={handleCopyProgram} variant="contained" sx={{ marginLeft: 2, color: '#efa37f', backgroundColor: 'white', ':hover': { backgroundColor: 'lightgray' } }}>
+                      Copy Program
+                    </Button>
+                  )}
+                </Box>
+
+                <Tooltip title="Account options">
+                  <IconButton color="inherit" onClick={handleAccountMenuClick}>
+                    <AccountCircleIcon />
+                  </IconButton>
+                </Tooltip>
+
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleAccountMenuClose}
+                  anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                  transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+                >
+                  <MenuItem onClick={handleSignOut}>Sign out</MenuItem>
+                </Menu>
+              </>
+            )} 
+          </>  
         ) : (
           <FitnessCenterIcon onClick={() => navigate('/login')} sx={{ fontSize: 40, marginRight: 3, cursor: 'pointer' }} />
         )}
