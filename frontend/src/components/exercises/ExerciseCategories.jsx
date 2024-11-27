@@ -7,7 +7,7 @@ import Divider from '@mui/material/Divider';
 import ListItemButton from '@mui/material/ListItemButton';
 import { Box, Checkbox, Typography, Alert } from '@mui/material'
 
-const ExerciseCategories = ( { programId, updateExercisesInProgram }) => {
+const ExerciseCategories = ( { programId, updateExercisesInProgram, updateCheckBoxes }) => {
   const [categories, setCategories] = useState([]) // Ensure the initial value is an empty array
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [loading, setLoading] = useState(true) // Add a loading state
@@ -82,7 +82,7 @@ const ExerciseCategories = ( { programId, updateExercisesInProgram }) => {
       {selectedCategory && (
         <div>
           <h3 style={{ paddingLeft: '1vw' }}>Choose your exercises</h3>
-          <ExerciseList categoryId={selectedCategory} programId={programId} updateExercisesInProgram={updateExercisesInProgram} />
+          <ExerciseList categoryId={selectedCategory} programId={programId} updateExercisesInProgram={updateExercisesInProgram} updateCheckBoxes={updateCheckBoxes} />
         </div>
       )}
     </div>
