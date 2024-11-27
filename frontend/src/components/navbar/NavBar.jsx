@@ -26,8 +26,11 @@ const NavBar = () => {
 
   const handleCreateNewClick = async() => {
     try {
-      await programs.create({ programName: 'My program' })
-      navigate('/')
+      // Get programs
+      const programList = await programs.getAll()
+      const count = programList.length
+      await programs.create({ programName: `My program ${count + 1}` })
+      navigate('/') 
       triggerSuccessMessage('New program created successfully!')
     } catch (error) {
       triggerErrorMessage('Failed to create a new program.')
