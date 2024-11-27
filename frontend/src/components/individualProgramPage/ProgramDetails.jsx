@@ -196,7 +196,7 @@ const ProgramDetails = () => {
   if (loading) {
     return (
       <Container>
-        <CircularProgress />
+        <CircularProgress sx={{color:'#e46225', marginTop: 2}}/>
         <Typography variant="h6" component="div" sx={{ marginTop: 2 }}>
           Loading program details...
         </Typography>
