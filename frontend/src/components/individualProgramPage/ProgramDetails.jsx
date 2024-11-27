@@ -275,7 +275,18 @@ const ProgramDetails = () => {
                                 const updatedSet = { ...set, weight: e.target.value }
                                 handleSaveSet(exerciseIndex, setIndex, updatedSet)
                               }}
-                              sx={{ width: 80 }}
+                              sx={{ 
+                                width: 80,
+                                backgroundColor: 'white',
+                                '& .MuiOutlinedInput-root': {
+                                  '&.Mui-focused fieldset': {
+                                    borderColor: '#e46225', // Custom border color
+                                  },
+                                },
+                                '& .MuiInputLabel-root.Mui-focused': {
+                                  color: '#e46225', // Custom label color
+                                },
+                              }}
                             />
                             <TextField
                               label="Reps"
@@ -296,7 +307,18 @@ const ProgramDetails = () => {
                                 const updatedSet = { ...set, reps: e.target.value }
                                 handleSaveSet(exerciseIndex, setIndex, updatedSet)
                               }}
-                              sx={{ width: 80 }}
+                              sx={{ 
+                                width: 80,
+                                backgroundColor: 'white',
+                                '& .MuiOutlinedInput-root': {
+                                  '&.Mui-focused fieldset': {
+                                    borderColor: '#e46225', // Custom border color
+                                  },
+                                },
+                                '& .MuiInputLabel-root.Mui-focused': {
+                                  color: '#e46225', // Custom label color
+                                },
+                              }}
                             />
 
                             {/* Button to remove set */}
