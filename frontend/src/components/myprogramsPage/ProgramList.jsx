@@ -41,7 +41,7 @@ const ProgramList = () => {
     const fetchPrograms = async () => {
       try {
         const fetchedPrograms = await programsService.getAll()
-        setPrograms(fetchedPrograms)
+        setPrograms(fetchedPrograms.reverse())
         setLoading(false)
       } catch (err) {
         triggerErrorMessage('Failed to fetch program details')
