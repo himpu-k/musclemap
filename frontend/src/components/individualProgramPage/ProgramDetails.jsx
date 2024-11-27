@@ -33,6 +33,10 @@ const ProgramDetails = () => {
   const toggleMode = (mode) => {
     setIsEditMode(mode === 'edit');
     navigate(`/programs/${id}?mode=${mode}`); // Update the URL to reflect the current mode
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth', // Adds a smooth scroll effect
+    });
   };
 
   useEffect(() => {
