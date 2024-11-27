@@ -116,9 +116,7 @@ const NavBar = () => {
             </Menu>
           </>
         ) : (
-          <Button onClick={() => navigate('/login')} variant="contained" sx={{ color: '#efa37f', backgroundColor: 'white', ':hover': { backgroundColor: 'lightgray' } }}>
-            Login
-          </Button>
+          <FitnessCenterIcon onClick={() => navigate('/login')} sx={{ fontSize: 40, marginRight: 3, cursor: 'pointer' }} />
         )}
       </Toolbar>
     </AppBar>
