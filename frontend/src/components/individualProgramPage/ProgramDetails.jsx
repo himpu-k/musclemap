@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import programService from '../../services/programs'
-import { Container, Typography, CircularProgress, Box, TextField, IconButton, Button } from '@mui/material'
+import { Container, Tooltip, Typography, CircularProgress, Box, TextField, IconButton, Button } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import ExerciseCategories from '../exercises/ExerciseCategories'
 import { useAlert } from '../../context/AlertContext'
@@ -223,18 +223,22 @@ const ProgramDetails = () => {
                         onChange={(e) => setNewProgramName(e.target.value)}
                         sx={{ marginRight: 2 }}
                       />
-                      <IconButton onClick={handleSaveProgramName}>
-                        <CheckCircleIcon />
-                      </IconButton>
+                      <Tooltip title="Save program name">
+                        <IconButton onClick={handleSaveProgramName}>
+                          <CheckCircleIcon />
+                        </IconButton>
+                      </Tooltip>
                     </>
                   ) : (
                     <>
                       <Typography variant="h4" component="h2" gutterBottom>
                         {program.programName}
                       </Typography>
-                      <IconButton onClick={() => setEditMode(true)} sx={{ marginLeft: 2 }}>
-                        <EditIcon />
-                      </IconButton>
+                      <Tooltip title="Edit program name">
+                        <IconButton onClick={() => setEditMode(true)} sx={{ marginLeft: 2 }}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
                     </>
                   )}
                 </Box>
@@ -292,9 +296,11 @@ const ProgramDetails = () => {
                             />
 
                             {/* Button to remove set */}
-                            <IconButton onClick={() => handleRemoveSet(exerciseIndex, setIndex)}>
-                              <DeleteIcon/>
-                            </IconButton>
+                            <Tooltip title="Remove set">
+                              <IconButton onClick={() => handleRemoveSet(exerciseIndex, setIndex)}>
+                                <DeleteIcon/>
+                              </IconButton>
+                            </Tooltip>
 
                             {/* Show checkmark if set was saved */}
                             {savedSetIndex?.exerciseIndex === exerciseIndex && savedSetIndex?.setIndex === setIndex && (
@@ -304,9 +310,11 @@ const ProgramDetails = () => {
                         ))}
 
                         {/* Button to add a new set */}
-                        <IconButton onClick={() => handleAddSet(exerciseIndex)}>
-                          <AddIcon />
-                        </IconButton>
+                        <Tooltip title="Add set">
+                          <IconButton onClick={() => handleAddSet(exerciseIndex)}>
+                            <AddIcon />
+                          </IconButton>
+                        </Tooltip>
                       </Box>
                     ))
                   ) : (
