@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import programService from '../../services/programs'
 import { Container, Tooltip, Typography, CircularProgress, Box, TextField, IconButton, Button } from '@mui/material'
@@ -10,6 +10,7 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import OrangeButton from '../generalComponents/OrangeButton'
+import CloseIcon from '@mui/icons-material/Close';
 
 const ProgramDetails = () => {
   const { triggerErrorMessage, triggerSuccessMessage } = useAlert()
@@ -22,7 +23,9 @@ const ProgramDetails = () => {
   const [newProgramName, setNewProgramName] = useState('') // Track the new program name while editing
   const [customExerciseName, setCustomExerciseName] = useState('') // Track the name of the new custom exercise
   const [showCustomExerciseInput, setShowCustomExerciseInput] = useState(false) // Track whether to show input for custom exercise
-  
+  const isInitialized = useRef(false); // Tracks if initialization is complete
+  const [updateCheckBoxes, setUpdateCheckBoxes] = useState(Date.now()); //To update the checkboxes in the exercise list
+
   // Extract "mode" from query parameters
   const searchParams = new URLSearchParams(location.search);
   const initialMode = searchParams.get('mode') || 'view';
@@ -65,6 +68,7 @@ const ProgramDetails = () => {
     try {
       const updatedProgram = await programService.getById(id)
       setProgram(updatedProgram) // Update program exercises
+      setUpdateCheckBoxes(Date.now()) //This triggers the exercise list to update the checkboxes
     } catch (error) {
       console.error('Failed to update program exercises:', error)
     }
@@ -195,6 +199,20 @@ const ProgramDetails = () => {
     }
 
     programService.update(id, updatedProgram)
+  }
+
+  //Handle removing the whole exercise from the program
+  const handleRemoveExerciseFromProgram = async (exerciseIndex) => {
+    const currentProgram = await programService.getById(id)
+
+    // Remove the exercise with the specified `exerciseIndex`
+    currentProgram.exercises.splice(exerciseIndex, 1)
+    
+    // Call the service to update the program with the removed exercise
+    await programService.update(id, currentProgram)
+
+    // Update the selectedExercises state by removing the unchecked exercise
+    updateExercisesInProgram()
   }
 
   if (loading) {
@@ -367,7 +385,7 @@ const ProgramDetails = () => {
   return (
     <Grid container spacing={6} sx={{marginTop: 2, marginBottom: 2, marginLeft: 1, marginRight: 1}}>
       <Grid className="exerciseList" size={{ xs: 12, md: 4 }}>
-        <ExerciseCategories programId={id} updateExercisesInProgram={updateExercisesInProgram} />
+        <ExerciseCategories programId={id} updateExercisesInProgram={updateExercisesInProgram} updateCheckBoxes={updateCheckBoxes}/>
       </Grid>
       <Grid size={{ xs: 12, md: 8 }}>
         <Grid sx={{background:'#ebf5ff', borderRadius: 10}}>
@@ -414,7 +432,14 @@ const ProgramDetails = () => {
                   {program.exercises && program.exercises.length > 0 ? (
                     program.exercises.map((exercise, exerciseIndex) => (
                       <Box key={exerciseIndex} sx={{ marginBottom: 2 }}>
-                        <Typography variant="h6" sx={{ marginBottom: 2 }}>{exercise.name}</Typography>
+                        <Box sx={{ marginBottom: 2 }}>
+                          <Typography variant="h6" sx={{display: "inline", verticalAlign: "middle"}}>{exercise.name}</Typography>
+
+                          {/*Remove exercise from the program */}
+                          <IconButton onClick={() => handleRemoveExerciseFromProgram(exerciseIndex)}>
+                                <CloseIcon/>
+                          </IconButton>
+                        </Box>
 
                         {exercise.sets && exercise.sets.length > 0 && exercise.sets.map((set, setIndex) => (
                           <Box key={setIndex} sx={{ display: 'flex', alignItems: 'center', gap: 2, marginBottom: 2 }}>

@@ -8,7 +8,7 @@ import ListItem from '@mui/material/ListItem';
 import Divider from '@mui/material/Divider';
 import MoreInfoPopUp from './MoreInfoPopUp'
 
-const ExerciseList = ({ categoryId, programId, updateExercisesInProgram }) => {
+const ExerciseList = ({ categoryId, programId, updateExercisesInProgram, updateCheckBoxes }) => {
   const { triggerSuccessMessage, triggerErrorMessage } = useAlert()
   const [exercises, setExercises] = useState([])
   const [loading, setLoading] = useState(true)
@@ -30,7 +30,7 @@ const ExerciseList = ({ categoryId, programId, updateExercisesInProgram }) => {
     }
 
     fetchExercises()
-  }, [categoryId, programId])
+  }, [categoryId, programId, updateCheckBoxes])
 
   const handleCheckboxChange = async (exerciseId, isChecked) => {
     try {
