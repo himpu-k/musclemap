@@ -359,7 +359,18 @@ const ProgramDetails = () => {
                         label="Program Name"
                         value={newProgramName}
                         onChange={(e) => setNewProgramName(e.target.value)}
-                        sx={{ marginRight: 2 }}
+                        sx={{ 
+                          marginRight: 2,
+                          backgroundColor: 'white',
+                          '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                              borderColor: '#e46225', // Custom border color
+                            },
+                          },
+                          '& .MuiInputLabel-root.Mui-focused': {
+                            color: '#e46225', // Custom label color
+                          },
+                         }}
                       />
                       <IconButton onClick={handleSaveProgramName}>
                         <CheckCircleIcon />
@@ -405,7 +416,18 @@ const ProgramDetails = () => {
                                 const updatedSet = { ...set, weight: e.target.value }
                                 handleSaveSet(exerciseIndex, setIndex, updatedSet)
                               }}
-                              sx={{ width: 80 }}
+                              sx={{ 
+                                width: 80,
+                                backgroundColor: 'white',
+                                '& .MuiOutlinedInput-root': {
+                                  '&.Mui-focused fieldset': {
+                                    borderColor: '#e46225', // Custom border color
+                                  },
+                                },
+                                '& .MuiInputLabel-root.Mui-focused': {
+                                  color: '#e46225', // Custom label color
+                                },
+                              }}
                             />
                             <TextField
                               label="Reps"
@@ -426,7 +448,18 @@ const ProgramDetails = () => {
                                 const updatedSet = { ...set, reps: e.target.value }
                                 handleSaveSet(exerciseIndex, setIndex, updatedSet)
                               }}
-                              sx={{ width: 80 }}
+                              sx={{ 
+                                width: 80,
+                                backgroundColor: 'white',
+                                '& .MuiOutlinedInput-root': {
+                                  '&.Mui-focused fieldset': {
+                                    borderColor: '#e46225', // Custom border color
+                                  },
+                                },
+                                '& .MuiInputLabel-root.Mui-focused': {
+                                  color: '#e46225', // Custom label color
+                                },
+                              }}
                             />
 
                             {/* Button to remove set */}
@@ -453,7 +486,7 @@ const ProgramDetails = () => {
 
                   {/* Button to toggle adding custom exercise */}
                   {!showCustomExerciseInput && (
-                    <Button onClick={() => setShowCustomExerciseInput(true)} variant="outlined" sx={{ marginTop: 2 }}>
+                    <Button onClick={() => setShowCustomExerciseInput(true)} variant="outlined" sx={{ marginTop: 2, color: '#e46225', backgroundColor: 'white', borderColor: '#e46225', ':hover': { backgroundColor: 'lightgray' } }}>
                       Add Custom Exercise
                     </Button>
                   )}
@@ -465,9 +498,20 @@ const ProgramDetails = () => {
                         label="Custom Exercise Name"
                         value={customExerciseName}
                         onChange={(e) => setCustomExerciseName(e.target.value)}
-                        sx={{ marginRight: 2 }}
+                        sx={{
+                          marginRight: 2, 
+                          backgroundColor: 'white',
+                          '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                              borderColor: '#e46225', // Custom border color
+                            },
+                          },
+                          '& .MuiInputLabel-root.Mui-focused': {
+                            color: '#e46225', // Custom label color
+                          },
+                        }}
                       />
-                      <Button onClick={handleAddCustomExercise} variant="contained">
+                      <Button onClick={handleAddCustomExercise} variant="outlined" sx={{ color: '#e46225', backgroundColor: 'white', borderColor: '#e46225', ':hover': { backgroundColor: 'lightgray' } }}>
                         Add Exercise
                       </Button>
                     </Box>
