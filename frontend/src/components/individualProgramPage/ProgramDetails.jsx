@@ -243,7 +243,18 @@ const ProgramDetails = () => {
                         label="Program Name"
                         value={newProgramName}
                         onChange={(e) => setNewProgramName(e.target.value)}
-                        sx={{ marginRight: 2 }}
+                        sx={{ 
+                          marginRight: 2,
+                          backgroundColor: 'white',
+                          '& .MuiOutlinedInput-root': {
+                            '&.Mui-focused fieldset': {
+                              borderColor: '#e46225', // Custom border color
+                            },
+                          },
+                          '& .MuiInputLabel-root.Mui-focused': {
+                            color: '#e46225', // Custom label color
+                          },
+                         }}
                       />
                       <Tooltip title="Save program name">
                         <IconButton onClick={handleSaveProgramName}>
@@ -412,18 +423,22 @@ const ProgramDetails = () => {
                           },
                          }}
                       />
-                      <IconButton onClick={handleSaveProgramName}>
-                        <CheckCircleIcon />
-                      </IconButton>
+                      <Tooltip title="Save program name">
+                        <IconButton onClick={handleSaveProgramName}>
+                          <CheckCircleIcon />
+                        </IconButton>
+                      </Tooltip>
                     </>
                   ) : (
                     <>
                       <Typography variant="h4" component="h2" gutterBottom>
                         {program.programName}
                       </Typography>
-                      <IconButton onClick={() => setEditMode(true)} sx={{ marginLeft: 2 }}>
-                        <EditIcon />
-                      </IconButton>
+                      <Tooltip title="Edit program name">
+                        <IconButton onClick={() => setEditMode(true)} sx={{ marginLeft: 2 }}>
+                          <EditIcon />
+                        </IconButton>
+                      </Tooltip>
                     </>
                   )}
                 </Box>
@@ -436,9 +451,11 @@ const ProgramDetails = () => {
                           <Typography variant="h6" sx={{display: "inline", verticalAlign: "middle"}}>{exercise.name}</Typography>
 
                           {/*Remove exercise from the program */}
-                          <IconButton onClick={() => handleRemoveExerciseFromProgram(exerciseIndex)}>
-                                <CloseIcon/>
-                          </IconButton>
+                          <Tooltip title="Remove exercise from the program">
+                            <IconButton onClick={() => handleRemoveExerciseFromProgram(exerciseIndex)}>
+                                  <CloseIcon/>
+                            </IconButton>
+                          </Tooltip>
                         </Box>
 
                         {exercise.sets && exercise.sets.length > 0 && exercise.sets.map((set, setIndex) => (
@@ -510,9 +527,11 @@ const ProgramDetails = () => {
                             />
 
                             {/* Button to remove set */}
-                            <IconButton onClick={() => handleRemoveSet(exerciseIndex, setIndex)}>
-                              <DeleteIcon/>
-                            </IconButton>
+                            <Tooltip title="Remove set">
+                              <IconButton onClick={() => handleRemoveSet(exerciseIndex, setIndex)}>
+                                <DeleteIcon/>
+                              </IconButton>
+                            </Tooltip>
 
                             {/* Show checkmark if set was saved */}
                             {savedSetIndex?.exerciseIndex === exerciseIndex && savedSetIndex?.setIndex === setIndex && (
@@ -522,9 +541,11 @@ const ProgramDetails = () => {
                         ))}
 
                         {/* Button to add a new set */}
-                        <IconButton onClick={() => handleAddSet(exerciseIndex)}>
-                          <AddIcon />
-                        </IconButton>
+                        <Tooltip title="Add set">
+                          <IconButton onClick={() => handleAddSet(exerciseIndex)}>
+                            <AddIcon />
+                          </IconButton>
+                        </Tooltip>
                       </Box>
                     ))
                   ) : (
