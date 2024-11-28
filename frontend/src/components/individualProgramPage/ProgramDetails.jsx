@@ -211,9 +211,11 @@ const ProgramDetails = () => {
       
       // Call the service to update the program with the removed exercise
       await programService.update(id, currentProgram)
-      triggerSuccessMessage('Exercise removed successfully!')
+      
       // Call the update
       updateExercisesInProgram()
+      triggerSuccessMessage('Exercise removed successfully!')
+      
       } catch (error) {
         triggerErrorMessage('Failed to remove exercise')
     }
