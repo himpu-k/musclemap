@@ -203,16 +203,20 @@ const ProgramDetails = () => {
 
   //Handle removing the whole exercise from the program
   const handleRemoveExerciseFromProgram = async (exerciseIndex) => {
-    const currentProgram = await programService.getById(id)
+    try {
+      const currentProgram = await programService.getById(id)
 
-    // Remove the exercise with the specified `exerciseIndex`
-    currentProgram.exercises.splice(exerciseIndex, 1)
-    
-    // Call the service to update the program with the removed exercise
-    await programService.update(id, currentProgram)
-
-    // Update the selectedExercises state by removing the unchecked exercise
-    updateExercisesInProgram()
+      // Remove the exercise with the specified `exerciseIndex`
+      currentProgram.exercises.splice(exerciseIndex, 1)
+      
+      // Call the service to update the program with the removed exercise
+      await programService.update(id, currentProgram)
+      triggerSuccessMessage('Exercise removed successfully!')
+      // Call the update
+      updateExercisesInProgram()
+      } catch (error) {
+        triggerErrorMessage('Failed to remove exercise')
+    }
   }
 
   if (loading) {
