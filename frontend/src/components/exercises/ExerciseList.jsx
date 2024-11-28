@@ -103,6 +103,11 @@ const ExerciseList = ({ categoryId, programId, updateExercisesInProgram, updateC
               <Checkbox
                 checked={selectedExercises.includes(exercise.id.toString())}
                 onChange={() => handleCheckboxChange(exercise.id, selectedExercises.includes(exercise.id.toString()))}
+                sx={{
+                  '&.Mui-checked': {
+                    color:'#e46225',
+                  },
+                }}
               />
               <Typography variant="h6" sx={{ ml: 1 }}>
                 {exercise.exercises[0].name}
@@ -112,7 +117,6 @@ const ExerciseList = ({ categoryId, programId, updateExercisesInProgram, updateC
             <Box ml={25} mt={0.10}>
               <MoreInfoPopUp exercise={exercise}/>
             </Box>
-            <br />
           </List>
         ))}
       </ul>

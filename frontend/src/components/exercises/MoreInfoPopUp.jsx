@@ -1,12 +1,13 @@
 import * as React from 'react';
 import Button from '@mui/material/Button';
+import { Tooltip, IconButton } from '@mui/material'
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { Typography } from '@mui/material';
+import InfoIcon from '@mui/icons-material/Info';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -26,15 +27,11 @@ const MoreInfoPopUp = ({ exercise }) => {
   return (
     
     <React.Fragment>
-      <Typography variant="h6" sx={{ ml: 1 }}> 
-        <Button style={{
-        textDecoration: 'underline',
-        textTransform: 'none',
-        color: 'black'
-          }} onClick={handleClickOpen}>
-          More info
-        </Button>
-      </Typography>
+        <Tooltip title="More info">
+          <IconButton onClick={handleClickOpen}>
+            <InfoIcon />
+          </IconButton>
+        </Tooltip>
       <Dialog
         open={open}
         TransitionComponent={Transition}
