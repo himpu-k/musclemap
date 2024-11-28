@@ -4,8 +4,6 @@ import programService from '../../services/programs'
 import { Box, Checkbox, Typography, Alert } from '@mui/material'
 import { useAlert } from '../../context/AlertContext'
 import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import Divider from '@mui/material/Divider';
 import MoreInfoPopUp from './MoreInfoPopUp'
 
 const ExerciseList = ({ categoryId, programId, updateExercisesInProgram, updateCheckBoxes }) => {
@@ -96,9 +94,8 @@ const ExerciseList = ({ categoryId, programId, updateExercisesInProgram, updateC
 
   return (
     <div>
-      <ul>
         {exercises.map((exercise) => (
-          <List key={exercise.id}>
+          <List key={exercise.id} sx={{paddingLeft: '1vw', display: 'flex'}}>
             <Box display="flex" alignItems="center" mb={2}>
               <Checkbox
                 checked={selectedExercises.includes(exercise.id.toString())}
@@ -114,12 +111,11 @@ const ExerciseList = ({ categoryId, programId, updateExercisesInProgram, updateC
               </Typography>
               
             </Box>
-            <Box ml={25} mt={0.10}>
+            <Box >
               <MoreInfoPopUp exercise={exercise}/>
             </Box>
           </List>
         ))}
-      </ul>
     </div>
   )
 }
