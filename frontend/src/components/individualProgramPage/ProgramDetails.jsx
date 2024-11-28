@@ -10,7 +10,16 @@ import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import DeleteIcon from '@mui/icons-material/Delete'
 import EditIcon from '@mui/icons-material/Edit'
 import OrangeButton from '../generalComponents/OrangeButton'
+import RedButton from '../generalComponents/RedButton'
 import CloseIcon from '@mui/icons-material/Close';
+import programsService from '../../services/programs'
+import {
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material'
 
 const ProgramDetails = () => {
   const { triggerErrorMessage, triggerSuccessMessage } = useAlert()
@@ -25,6 +34,8 @@ const ProgramDetails = () => {
   const [showCustomExerciseInput, setShowCustomExerciseInput] = useState(false) // Track whether to show input for custom exercise
   const isInitialized = useRef(false); // Tracks if initialization is complete
   const [updateCheckBoxes, setUpdateCheckBoxes] = useState(Date.now()); //To update the checkboxes in the exercise list
+  const [openDialog, setOpenDialog] = useState(false) // State to manage the delete confirmation dialog
+  const [programToDelete, setProgramToDelete] = useState(null) // State to track which program is to be deleted
 
   // Extract "mode" from query parameters
   const searchParams = new URLSearchParams(location.search);
@@ -218,6 +229,28 @@ const ProgramDetails = () => {
       
       } catch (error) {
         triggerErrorMessage('Failed to remove exercise')
+    }
+  }
+
+  const handleOpenDialog = (progam) => {
+    setProgramToDelete(program)
+    setOpenDialog(true)
+  }
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false)
+    setProgramToDelete(null)
+  }
+
+  const handleDeleteProgram = async () => {
+    try {
+      await programsService.remove(programToDelete._id)
+      navigate('/');
+      triggerSuccessMessage(`Program "${programToDelete.programName}" deleted successfully`)
+      handleCloseDialog() // Close dialog after successful deletion
+    } catch (error) {
+      triggerErrorMessage('Failed to delete the program')
+      handleCloseDialog()
     }
   }
 
@@ -558,44 +591,51 @@ const ProgramDetails = () => {
                     <Typography>No exercises found for this program.</Typography>
                   )}
 
-                  {/* Button to toggle adding custom exercise */}
-                  {!showCustomExerciseInput && (
-                    <Button onClick={() => setShowCustomExerciseInput(true)} variant="outlined" sx={{ marginTop: 2, color: '#e46225', backgroundColor: 'white', borderColor: '#e46225', ':hover': { backgroundColor: 'lightgray' } }}>
-                      Add Custom Exercise
-                    </Button>
-                  )}
-
-                  {/* Input and button to add a new custom exercise */}
-                  {showCustomExerciseInput && (
-                    <Box display="flex" alignItems="center" sx={{ marginTop: 2 }}>
-                      <TextField
-                        label="Custom Exercise Name"
-                        value={customExerciseName}
-                        onChange={(e) => setCustomExerciseName(e.target.value)}
-                        sx={{
-                          marginRight: 2, 
-                          backgroundColor: 'white',
-                          '& .MuiOutlinedInput-root': {
-                            '&.Mui-focused fieldset': {
-                              borderColor: '#e46225', // Custom border color
-                            },
-                          },
-                          '& .MuiInputLabel-root.Mui-focused': {
-                            color: '#e46225', // Custom label color
-                          },
-                        }}
-                      />
-                      <Button onClick={handleAddCustomExercise} variant="outlined" sx={{ color: '#e46225', backgroundColor: 'white', borderColor: '#e46225', ':hover': { backgroundColor: 'lightgray' } }}>
-                        Add Exercise
+                  <Box sx={{ display: 'flex', flexDirection: { xs: 'column', sm: 'row' }, justifyContent: 'space-between', alignItems: 'end', margin: 2 }}>
+                    {/* Button to toggle adding custom exercise */}
+                    {!showCustomExerciseInput && (
+                      <Button onClick={() => setShowCustomExerciseInput(true)} variant="outlined" sx={{ marginRight: 2 , marginLeft: -2, color: '#e46225', backgroundColor: 'white', borderColor: '#e46225', ':hover': { backgroundColor: 'lightgray' } }}>
+                        Add Custom Exercise
                       </Button>
+                    )}
+
+                    {/* Input and button to add a new custom exercise */}
+                    {showCustomExerciseInput && (
+                      <Box display="flex" alignItems="center" sx={{ flexDirection: { xs: 'column', sm: 'row' }, marginLeft: -2 }}>
+                        <TextField
+                          label="Custom Exercise Name"
+                          value={customExerciseName}
+                          onChange={(e) => setCustomExerciseName(e.target.value)}
+                          sx={{
+                            marginTop: 2,
+                            marginRight: 2, 
+                            backgroundColor: 'white',
+                            '& .MuiOutlinedInput-root': {
+                              '&.Mui-focused fieldset': {
+                                borderColor: '#e46225', // Custom border color
+                              },
+                            },
+                            '& .MuiInputLabel-root.Mui-focused': {
+                              color: '#e46225', // Custom label color
+                            },
+                          }}
+                        />
+                        <Button onClick={handleAddCustomExercise} variant="outlined" sx={{ marginTop:2, marginRight: -8, color: '#e46225', backgroundColor: 'white', borderColor: '#e46225', ':hover': { backgroundColor: 'lightgray' } }}>
+                          Add Exercise
+                        </Button>
+                      </Box>
+                    )}
+
+                    {/*Delete button and button to open the side bar for editing*/}
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: 2, alignSelf: { xs: 'end', sm: 'center'} }}>
+                      <RedButton onClick={() => handleOpenDialog(program) } variant="contained" sx={{ marginLeft: 1.5, marginBottom: -2 }}>
+                            Delete
+                      </RedButton>
+                      <OrangeButton onClick={() => toggleMode('view')} variant="contained" sx={{ marginLeft: 1.5, marginBottom: -2 }}>
+                          View
+                      </OrangeButton>
                     </Box>
-                  )}
-                </Box>
-                {/*Button to open the side bar for editing*/}
-                <Box>
-                  <OrangeButton onClick={() => toggleMode('view')} variant="contained" sx={{float: 'right', margin: 2 }}>
-                      View
-                  </OrangeButton>
+                  </Box>
                 </Box>
               </>
             ) : (
@@ -604,6 +644,26 @@ const ProgramDetails = () => {
           </Grid>
         </Grid>
       </Grid>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Delete Program</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete the program{' '}
+            <strong>{programToDelete?.programName}</strong>?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog}>Cancel</Button>
+          <Button onClick={handleDeleteProgram} color="error">
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+
+
     </Grid>
   )
 }
